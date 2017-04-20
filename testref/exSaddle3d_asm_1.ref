@@ -1,0 +1,29 @@
+Boundary Conditions: SolCx
+ModelType: StokesXSinker
+  params: eta0 1.0000e+00
+  params: eta1 1.0000e+00
+  params: num sinkers 3
+  params: sinker radius 5.0000e-02
+  Residual norms for saddle_ solve.
+  0 KSP Residual norm 6.09034 
+  1 KSP Residual norm 5.65223 
+  2 KSP Residual norm 0.292749 
+  3 KSP Residual norm 0.110451 
+  4 KSP Residual norm 0.0324346 
+  5 KSP Residual norm 0.00965002 
+  6 KSP Residual norm 0.00284267 
+  7 KSP Residual norm 0.000457703 
+  8 KSP Residual norm 0.000161016 
+  9 KSP Residual norm 5.46772e-05 
+#PETSc Option Table entries:
+-mx 6
+-options_left
+-saddle_ksp_monitor_short
+-saddle_pc_asm_dm_subdomains
+-saddle_pc_type asm
+-saddle_sub_ksp_type preonly
+-saddle_sub_pc_factor_mat_solver_package umfpack
+-saddle_sub_pc_type lu
+-set_ksp_dm
+#End of PETSc Option Table entries
+There are no unused options.

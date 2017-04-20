@@ -1,0 +1,26 @@
+Boundary Conditions: Compression
+ModelType: LameHomogeneous
+  params: mu0 1.0000e+00
+  params: lambda0 1.0000e+00
+  Residual norms for saddle_ solve.
+  0 KSP Residual norm 1.33889 
+  1 KSP Residual norm 0.451572 
+  2 KSP Residual norm 0.228241 
+  3 KSP Residual norm 0.125129 
+  4 KSP Residual norm 0.116136 
+  5 KSP Residual norm 0.083483 
+  6 KSP Residual norm 0.0552789 
+  7 KSP Residual norm 0.0454047 
+  8 KSP Residual norm 0.0436303 
+  9 KSP Residual norm 0.0384422 
+ 10 KSP Residual norm 0.035539 
+|u,v,w|_1   +4.141727e+01 , +1.331943e+01 , +4.232094e+00
+|u,v,w|_2   +1.770468e+00 , +6.092321e-01 , +2.214221e-01
+|u,v,w|_inf +9.997123e-02 , +4.527614e-02 , +1.915724e-02
+|u,v,w|_min -9.997123e-02 , -4.527614e-02 , -1.915724e-02
+|u,v,w|_max +9.997123e-02 , +0.000000e+00 , +1.915724e-02
+|p|_1          +1.671262e+01
+|p|_2          +1.580859e+00
+|p|_inf        +2.372063e-01
+|p|_min        -5.003142e-03
+|p|_max        +2.372063e-01

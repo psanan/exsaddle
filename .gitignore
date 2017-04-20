@@ -1,0 +1,17 @@
+ex42mod
+ex23mod
+exSaddle2d
+exSaddle2d_lame
+exSaddle3d
+exSaddle3d_lame
+MatLoadSolve
+
+*.o
+
+*.vts
+*.pvts
+
+.*.swp
+*.DS_Store
+
+ilupack

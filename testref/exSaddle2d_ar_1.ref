@@ -1,0 +1,40 @@
+Boundary Conditions: SolCx
+ModelType: StokesSolCx
+  params: eta0 1.0000e+00
+  params: eta1 1.0000e+00
+  params: xc   5.0000e-01
+  params: nz   1
+  Residual norms for saddle_ solve.
+  0 KSP Residual norm 0.000218813 
+  1 KSP Residual norm 1.22451e-05 
+  2 KSP Residual norm 2.56968e-06 
+  3 KSP Residual norm 2.2556e-06 
+  4 KSP Residual norm 2.43808e-07 
+  5 KSP Residual norm 2.75584e-08 
+  6 KSP Residual norm 3.20309e-09 
+  7 KSP Residual norm 2.28778e-09 
+  8 KSP Residual norm 2.057e-10 
+#PETSc Option Table entries:
+-fs
+-model 0
+-mx 32
+-my 32
+-options_left
+-saddle_fieldsplit_p_ksp_type preonly
+-saddle_fieldsplit_p_pc_type bjacobi
+-saddle_fieldsplit_u_ksp_rtol 1e-2
+-saddle_fieldsplit_u_ksp_type gcr
+-saddle_fieldsplit_u_mg_coarse_pc_factor_mat_solver_package umfpack
+-saddle_fieldsplit_u_mg_levels_ksp_chebyshev_esteig 0,0.2,0,1.1
+-saddle_fieldsplit_u_mg_levels_ksp_max_it 8
+-saddle_fieldsplit_u_mg_levels_ksp_norm_type none
+-saddle_fieldsplit_u_mg_levels_ksp_type chebyshev
+-saddle_fieldsplit_u_mg_levels_pc_type jacobi
+-saddle_fieldsplit_u_pc_mg_galerkin
+-saddle_fieldsplit_u_pc_mg_levels 3
+-saddle_fieldsplit_u_pc_type mg
+-saddle_ksp_monitor_short
+-saddle_ksp_type fgmres
+-size_y 0.1
+#End of PETSc Option Table entries
+There are no unused options.

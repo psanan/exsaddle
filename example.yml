@@ -1,0 +1,15 @@
+# This is a simple example of using a YAML file to specify options
+# It is not supposed to be an example of a good solver (it's not).
+# Note that you need to configure PETSc to use YAML (e.g. --download-yaml)
+options_left : true
+
+mx:       8
+
+mg:       true
+nlevels:  3
+saddle:
+  ksp:
+    view:
+  mg_levels:
+    ksp:
+      type: gmres

@@ -1,0 +1,18 @@
+Boundary Conditions: SolCx
+ModelType: LameOneSinker
+  params: mu0 1.0000e+00
+  params: mu1 1.0000e+00
+  params: lambda0 1.0000e+00
+  params: lambda1 2.0000e+00
+  params: rad 2.5000e-01
+Linear saddle_ solve converged due to CONVERGED_RTOL iterations 45
+|u,v,w|_1   +2.424335e-01 , +8.144570e+01 , +2.424335e-01
+|u,v,w|_2   +1.328665e-02 , +3.395179e+00 , +1.328665e-02
+|u,v,w|_inf +1.498231e-03 , +1.748506e-01 , +1.498231e-03
+|u,v,w|_min -1.498231e-03 , -1.748506e-01 , -1.498231e-03
+|u,v,w|_max +1.498231e-03 , +0.000000e+00 , +1.498231e-03
+|p|_1          +2.229171e+01
+|p|_2          +2.433656e+00
+|p|_inf        +3.560354e-01
+|p|_min        -3.907551e-03
+|p|_max        +3.560354e-01

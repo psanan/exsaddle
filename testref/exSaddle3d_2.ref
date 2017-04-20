@@ -1,0 +1,16 @@
+Boundary Conditions: SolCx
+ModelType: StokesThreeSinker
+  params: eta0 1.0000e+00
+  params: eta1 1.0000e+00
+  params: rad  1.0000e-01
+Linear saddle_ solve did not converge due to DIVERGED_ITS iterations 10
+|u,v,w|_1   +3.737111e-02 , +9.833458e+01 , +3.181496e-02
+|u,v,w|_2   +1.981151e-03 , +2.752328e+00 , +1.651965e-03
+|u,v,w|_inf +2.038092e-04 , +8.578151e-02 , +1.782333e-04
+|u,v,w|_min -2.038092e-04 , -8.578151e-02 , -1.782333e-04
+|u,v,w|_max +1.905288e-04 , +0.000000e+00 , +1.782333e-04
+|p|_1          +1.159726e+00
+|p|_2          +1.367746e-01
+|p|_inf        +2.544881e-02
+|p|_min        -2.544881e-02
+|p|_max        +4.702835e-04

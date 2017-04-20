@@ -1,0 +1,15 @@
+Boundary Conditions: StokesMMS1
+ModelType: StokesMMS1
+  Residual norms for saddle_ solve.
+  0 KSP Residual norm 255.134 
+  1 KSP Residual norm 2.367e-11 
+---------------------
+Error in solution:
+  abs 0.005938
+  rel 2.3274e-05
+---------------------
+---------------------
+Error in velocity solution:
+  abs 0.000198842
+  rel 1.20852e-06
+---------------------

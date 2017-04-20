@@ -1,0 +1,41 @@
+Boundary Conditions: SolCx
+ModelType: StokesOneSinker
+  params: eta0 1.0000e+00
+  params: eta1 1.0000e+02
+  params: x 5.0000e-01
+  params: y 5.0000e-01
+  params: z 5.0000e-01
+  params: rad 2.5000e-01
+relative fill ILDL/A:  2.1e+00 (wrt 1458123 nz)
+  Residual norms for saddle_ solve.
+  0 KSP Residual norm 0.0180253 
+  1 KSP Residual norm 0.000443298 
+  2 KSP Residual norm 5.88452e-05 
+  3 KSP Residual norm 2.17508e-05 
+  4 KSP Residual norm 2.97791e-06 
+  5 KSP Residual norm 1.80016e-06 
+  6 KSP Residual norm 3.62761e-07 
+  7 KSP Residual norm 1.23856e-07 
+|u,v,w|_1   +8.302292e-02 , +3.704660e-01 , +8.302567e-02
+|u,v,w|_2   +1.691058e-03 , +6.567633e-03 , +1.691053e-03
+|u,v,w|_inf +8.269310e-05 , +2.438526e-04 , +8.270045e-05
+|u,v,w|_min -8.263734e-05 , -1.406807e-04 , -8.263652e-05
+|u,v,w|_max +8.269310e-05 , +2.438526e-04 , +8.270045e-05
+|p|_1          +3.667766e+02
+|p|_2          +1.617293e+01
+|p|_inf        +1.008374e+00
+|p|_min        -1.087767e-03
+|p|_max        +1.008374e+00
+#PETSc Option Table entries:
+-diagnostics
+-eta0 1
+-eta1 100
+-model 6
+-mx 8
+-options_left
+-saddle_ksp_monitor_short
+-saddle_ksp_pc_side right
+-saddle_pc_ildl_droptol 1e-3
+-saddle_pc_type ildl
+#End of PETSc Option Table entries
+There are no unused options.

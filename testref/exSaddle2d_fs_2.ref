@@ -1,0 +1,21 @@
+Boundary Conditions: SolCx
+ModelType: StokesSolCx
+  params: eta0 1.0000e+00
+  params: eta1 1.0000e+00
+  params: xc   5.0000e-01
+  params: nz   1
+  Residual norms for saddle_ solve.
+  0 KSP Residual norm 0.551398 
+  1 KSP Residual norm 0.380207 
+  2 KSP Residual norm 1.53861e-05 
+  3 KSP Residual norm 2.01647e-06 
+|u,v|_1   +2.004334e+00 , +4.185394e+00 
+|u,v|_2   +2.064493e-01 , +3.944164e-01 
+|u,v|_inf +3.641136e-02 , +5.404444e-02 
+|u,v|_min -3.641136e-02 , -5.404444e-02 
+|u,v|_max +2.247465e-02 , +5.404408e-02 
+|p|_1          +3.505891e+00
+|p|_2          +6.324640e-01
+|p|_inf        +1.864937e-01
+|p|_min        -1.864886e-01
+|p|_max        +1.864937e-01

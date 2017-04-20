@@ -1,0 +1,17 @@
+Boundary Conditions: SolCx
+ModelType: StokesSolCx
+  params: eta0 1.0000e+00
+  params: eta1 1.0000e+00
+  params: xc   5.0000e-01
+  params: nz   1
+Linear saddle_ solve did not converge due to DIVERGED_ITS iterations 100
+|u,v|_1   +8.726285e-01 , +1.869033e+00 
+|u,v|_2   +1.323427e-01 , +2.577055e-01 
+|u,v|_inf +3.396570e-02 , +5.072433e-02 
+|u,v|_min -3.396570e-02 , -5.072433e-02 
+|u,v|_max +2.070591e-02 , +5.072433e-02 
+|p|_1          +1.788742e+00
+|p|_2          +4.529099e-01
+|p|_inf        +1.667774e-01
+|p|_min        -1.667774e-01
+|p|_max        +1.667774e-01

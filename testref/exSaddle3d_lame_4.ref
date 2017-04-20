@@ -1,0 +1,29 @@
+Boundary Conditions: FixedBase
+ModelType: LameOneSinker
+  params: mu0 1.0000e+00
+  params: mu1 1.0000e+00
+  params: lambda0 1.0000e+01
+  params: lambda1 1.0000e+01
+  params: rad 2.5000e-01
+  Residual norms for saddle_ solve.
+  0 KSP Residual norm 0.0524433 
+  1 KSP Residual norm 0.0436565 
+  2 KSP Residual norm 0.0418014 
+  3 KSP Residual norm 0.0417887 
+  4 KSP Residual norm 0.0408044 
+  5 KSP Residual norm 0.0387796 
+  6 KSP Residual norm 0.0387727 
+  7 KSP Residual norm 0.0371705 
+  8 KSP Residual norm 0.0368165 
+  9 KSP Residual norm 0.0355404 
+ 10 KSP Residual norm 0.0336437 
+|u,v,w|_1   +7.502877e-01 , +1.138592e+01 , +7.502877e-01
+|u,v,w|_2   +6.551630e-02 , +4.618126e-01 , +6.551630e-02
+|u,v,w|_inf +1.600856e-02 , +2.480856e-02 , +1.600856e-02
+|u,v,w|_min -1.600856e-02 , -2.480856e-02 , -1.600856e-02
+|u,v,w|_max +1.600856e-02 , +0.000000e+00 , +1.600856e-02
+|p|_1          +1.280075e+01
+|p|_2          +1.816097e+00
+|p|_inf        +4.484259e-01
+|p|_min        -8.822062e-02
+|p|_max        +4.484259e-01

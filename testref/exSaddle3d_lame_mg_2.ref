@@ -1,0 +1,22 @@
+Boundary Conditions: SolCx
+ModelType: LameOneSinker
+  params: mu0 1.0000e+00
+  params: mu1 1.0000e+00
+  params: lambda0 1.0000e+00
+  params: lambda1 2.0000e+00
+  params: rad 2.5000e-01
+  Residual norms for saddle_ solve.
+  0 KSP Residual norm 0.0293701 
+  1 KSP Residual norm 0.000572393 
+  2 KSP Residual norm 4.09678e-06 
+  3 KSP Residual norm 1.0701e-07 
+|u,v,w|_1   +1.080208e+00 , +2.504222e+02 , +1.080208e+00
+|u,v,w|_2   +3.392006e-02 , +5.953065e+00 , +3.392006e-02
+|u,v,w|_inf +2.722643e-03 , +1.767593e-01 , +2.722643e-03
+|u,v,w|_min -2.722643e-03 , -1.767593e-01 , -2.722643e-03
+|u,v,w|_max +2.722643e-03 , +4.069991e-10 , +2.722643e-03
+|p|_1          +6.207604e+01
+|p|_2          +4.021551e+00
+|p|_inf        +3.607333e-01
+|p|_min        -5.007964e-03
+|p|_max        +3.607333e-01

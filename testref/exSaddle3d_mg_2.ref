@@ -1,0 +1,30 @@
+Boundary Conditions: SolCx
+ModelType: StokesXSinker
+  params: eta0 1.0000e+00
+  params: eta1 1.0000e+00
+  params: num sinkers 1
+  params: sinker radius 5.0000e-02
+  Residual norms for saddle_ solve.
+  0 KSP Residual norm 0.0179029 
+  1 KSP Residual norm 0.00016378 
+  2 KSP Residual norm 1.21789e-05 
+  3 KSP Residual norm 9.48249e-06 
+  4 KSP Residual norm 7.44205e-06 
+  5 KSP Residual norm 2.50608e-06 
+  6 KSP Residual norm 1.79811e-06 
+  7 KSP Residual norm 5.50205e-07 
+  8 KSP Residual norm 5.46292e-07 
+  9 KSP Residual norm 3.09028e-07 
+ 10 KSP Residual norm 2.76349e-07 
+ 11 KSP Residual norm 2.60047e-07 
+ 12 KSP Residual norm 1.57335e-07 
+|u,v,w|_1   +1.393734e-02 , +2.913087e-02 , +4.801178e-03
+|u,v,w|_2   +2.591135e-04 , +5.706097e-04 , +1.048733e-04
+|u,v,w|_inf +9.602934e-06 , +5.111484e-05 , +6.154862e-06
+|u,v,w|_min -8.114411e-06 , -5.111484e-05 , -6.154862e-06
+|u,v,w|_max +9.602934e-06 , +1.290041e-05 , +6.154862e-06
+|p|_1          +3.645439e+02
+|p|_2          +1.607010e+01
+|p|_inf        +1.000581e+00
+|p|_min        -6.577158e-05
+|p|_max        +1.000581e+00
