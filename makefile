@@ -1,24 +1,15 @@
-# TO THE USER:
-#  - You will likely need to override the following from the command line, or change them below:
-# ILUPACK_PLATFORM
-# EXSADDLE_WITH_PCILDL
-# EXSADDLE_WITH_PCILUPACK
-
-# To debug
-#  CFLAGS+=-g
-# This can be done at the command line, e.g.
-#  make CFLAGS+=-g exSaddle2d
+#####################
+# exSaddle Makefile #
+#####################
 
 # This repository includes two custom preconditioners, based on ILUPACK.
 # The versions here are included for historical reasons, but you should 
 # instead prefer to use the plugin versions, located at
 #   https://bitbucket.org/psanan/pcilupack
 
-
-# To be extra careful, we force you to set ILUPACK_PLATFORM (you can do this as an environment variable)
-# Values we have been using so far are GNU64, MACOSX64, GNU64CSCS
 # If you wish to build with PCILDL or PCILUPACK, define EXSADDLE_WITH_PCILDL or EXSADDLE_WITH_PCILUPACK, respectively, e.g.
-#  make EXSADDLE_WITH_PCILDL=1 
+# To be extra careful, we force you to set ILUPACK_PLATFORM
+#  make EXSADDLE_WITH_PCILDL=1 ILUPLATFORM=GNU64
 
 ifdef EXSADDLE_WITH_PCILUPACK
 EXSADDLE_WITH_CUSTOMPC=1
@@ -31,7 +22,6 @@ $(error you can define at most one of EXSADDLE_WITH_PCILDL and EXSADDLE_WITH_PCI
 endif
 endif
 
-# Custom PCs involving ILUPACK
 ifdef EXSADDLE_WITH_CUSTOMPC
 ifndef ILUPACK_PLATFORM
   $(error You must provide ILUPACK_PLATFORM, for example make ILUPACK_PLATFORM=GNU64, or set ILUPACK_PLATFORM in your environment. )
@@ -41,8 +31,8 @@ ILUPACK_DIR = ilupack
 ILUPACK_INCLUDE=-I${ILUPACK_DIR}/include
 ILUPACK_LIBS=-Lilupack/lib/${ILUPACK_PLATFORM} -lilupack_mc64  -lmetisomp -lmetis -lmetisomp -lcamd -lamd -lsuitesparseconfig -lsparspak -llapack -lblaslike -lblas 
 
-# You need to build these by hand (see ilupack/notdistributed/README). This will
-#  likely involve commands like:
+# You need to build these by hand (see ilupack/notdistributed/README). 
+# This will likely involve commands like:
 #     gfortran -O3 -fPIC mc64d.f -o MC64D.f
 ILUPACK_LIBS+=ilupack/notdistributed/MC64D.o ilupack/notdistributed/MC21D.o ilupack/notdistributed/MC64S.o ilupack/notdistributed/MC21S.o
 
@@ -59,6 +49,7 @@ EXECUTABLES=\
 all : ${EXECUTABLES}
 
 # --------------------------------------------------------------------------- #
+
 EX42MOD_OBJ=ex42mod.o
 EX23MOD_OBJ=ex23mod.o
 EXSADDLE2D_OBJ=exSaddle2d.o femixedspace2d.o exSaddle_io2d.o models2d.o
@@ -176,12 +167,6 @@ pcildl.o : pcildl.c pcildl.h
 
 pcilupack.o : pcilupack.c pcilupack.h 
 	-${CC} ${PCC_FLAGS} ${CFLAGS} ${ILUPACK_INCLUDE} -c ${ILUPACK_INCLUDE} -I$(PETSC_DIR)/$(PETSC_ARCH)/include -I$(PETSC_DIR)/include -o $@ $<  
-
-# --------------------------------------------------------------------------- #
-
-# TODO: remove?
-
-include ${PETSC_DIR}/lib/petsc/conf/test
 
 # --------------------------------------------------------------------------- #
 # Note: these tests are mainly intended as regression tests. The solvers here
