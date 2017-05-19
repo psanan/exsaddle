@@ -204,7 +204,8 @@ TESTS_STOKES3D = \
   test_exSaddle3d_mg_fs_coarse_1   \
 	test_exSaddle3d_asm_1  \
 	test_exSaddle3d_mg_asm_1 \
-	test_exSaddle3d_ar_1 
+	test_exSaddle3d_ar_1 \
+	test_exSaddle3d_pseudoice_1
 ifdef EXSADDLE_WITH_PCILDL
 TESTS_STOKES3D += test_exSaddle3d_ildl_1
 endif
@@ -243,6 +244,7 @@ test_lame3d : \
 	test_exSaddle3d_lame_5 \
   test_exSaddle3d_lame_mg_1 test_exSaddle3d_lame_mg_2 \
   test_exSaddle3d_lame_fs_1 test_exSaddle3d_lame_fs_2 \
+	test_exSaddle3d_pseudoice_1 \
 
 test_exSaddle2d_1 :
 	-@${MPIEXEC} -n 1 ./exSaddle2d  -model 0 -mx 4 -diagnostics -saddle_ksp_max_it 100 -saddle_ksp_converged_reason -saddle_pc_type jacobi > exSaddle2d_1.tmp 2>&1;	  \
@@ -496,6 +498,13 @@ test_exSaddle3d_ilupack_1 :
 	   else printf "${PWD}\nPossible problem with with exSaddle3d_ilupack_1, diffs above\n=========================================\n"; fi; \
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle3d_ilupack_1.tmp testref/exSaddle3d_ilupack_1.ref; fi; \
 	   ${RM} -f exSaddle3d_ilupack_1.tmp
+
+test_exSaddle3d_pseudoice_1 :
+	-@${MPIEXEC} -n 1 ./exSaddle3d -saddle_ksp_view -options_file abf.opts -model 11 -size_x 0.1 -mx 6 -saddle_ksp_monitor_short > exSaddle3d_pseudoice_1.tmp 2>&1; \
+	   if (${DIFF} testref/exSaddle3d_pseudoice_1.ref exSaddle3d_pseudoice_1.tmp) then true; \
+	   else printf "${PWD}\nPossible problem with with exSaddle3d_pseudoice_1, diffs above\n=========================================\n"; fi; \
+		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle3d_pseudoice_1.tmp testref/exSaddle3d_pseudoice_1.ref; fi; \
+	   ${RM} -f exSaddle3d_pseudoice_1.tmp
 
 # --------------------------------------------------------------------------- #
 
