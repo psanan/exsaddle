@@ -157,7 +157,7 @@ static PetscErrorCode SolCx_ISCreate_BCList(DM dmv,PetscBool global,IS *_is,Pets
   PetscFunctionReturn(0);
 }
 
-#ifdef LAME
+#if defined(LAME) || NSD==3
 /*****************************************************************************/
 static PetscErrorCode FixedBase_ISCreate_BCList(DM dmv,PetscBool global,IS *_is,PetscReal **_vals)
 {
@@ -232,6 +232,9 @@ static PetscErrorCode FixedBase_ISCreate_BCList(DM dmv,PetscBool global,IS *_is,
   
   PetscFunctionReturn(0);
 }
+#endif
+
+#ifdef LAME
 /*****************************************************************************/
 static PetscErrorCode Compression_ISCreate_BCList(DM dmv,PetscBool global,IS *_is,PetscReal **_vals)
 {
@@ -501,6 +504,11 @@ PetscErrorCode ISCreate_BCList(DM dmv,PetscBool global,IS *_is,PetscReal **_vals
       ierr = Compression_ISCreate_BCList(dmv,global,_is,_vals);CHKERRQ(ierr);
       break;
 #else
+#if NSD==3
+    case 11:
+      ierr = FixedBase_ISCreate_BCList(dmv,global,_is,_vals);CHKERRQ(ierr);
+      break;
+#endif
 #if NSD==2
     case 101:
       ierr = StokesMMS1_ISCreate_BCList(dmv,global,_is,_vals);CHKERRQ(ierr);
@@ -1304,6 +1312,13 @@ static PetscErrorCode StokesMMS1_EvaluateCoefficients(PetscReal coor[],PetscReal
 }
 #endif
 
+#if NSD==3
+/*****************************************************************************/
+static PetscErrorCode StokesPseudoIce_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,PetscReal Fu[],PetscReal Fp[])
+{
+// TODO...
+}
+#endif
 /*****************************************************************************/
 PetscErrorCode Stokes_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,PetscReal Fu[],PetscReal Fp[])
 {
@@ -1333,6 +1348,9 @@ PetscErrorCode Stokes_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,Petsc
 #if NSD == 3
     case 7:
       ierr = SinkerPtatin_EvaluateCoefficients(coor,eta,Fu,Fp);CHKERRQ(ierr);
+      break;
+    case 11:
+      ierr =  StokesPseudoIce_EvaluateCoefficients(coor,eta,Fu,Fp);CHKERRQ(ierr);
       break;
 #endif
 #if NSD == 2

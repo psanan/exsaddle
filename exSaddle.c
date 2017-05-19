@@ -33,6 +33,11 @@ static char help[] = "Solves the "
 "-model 9 : no inclusions, compression \n"
 "-model 10: single inclusion, compression \n"
 #endif
+#ifndef LAME
+#if NSD==3
+"-model 11: fixed base, viscosity varying across x\n"
+#endif
+#endif
 #ifdef LAME
 "-mu0 : Lame''s second parameter (shear modulus) of background \n"
 "-mu1 : Lame''s second parameter (shear modulus) of inclusion\n"
