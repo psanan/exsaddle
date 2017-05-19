@@ -1314,9 +1314,45 @@ static PetscErrorCode StokesMMS1_EvaluateCoefficients(PetscReal coor[],PetscReal
 
 #if NSD==3
 /*****************************************************************************/
+/*
+This is to experiment with a case in which it's important to have a preconditioner/smoother with strong coupling in the x direction.
+   */
 static PetscErrorCode StokesPseudoIce_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,PetscReal Fu[],PetscReal Fp[])
 {
-// TODO...
+  static PetscReal opts_eta0,opts_eta1;
+  static PetscBool been_here = PETSC_FALSE;
+  PetscReal        size_x;
+	PetscErrorCode   ierr;
+
+  PetscFunctionBeginUser;
+  if (!been_here) {
+    PetscPrintf(PETSC_COMM_WORLD,"ModelType: PseudoIce\n");
+    opts_eta0 = 1.0;
+    opts_eta1 = 10000.0;
+
+    ierr = PetscOptionsGetReal(NULL,NULL,"-eta0",&opts_eta0,0);CHKERRQ(ierr);
+    ierr = PetscOptionsGetReal(NULL,NULL,"-eta1",&opts_eta1,0);CHKERRQ(ierr);
+    PetscPrintf(PETSC_COMM_WORLD,"  params: eta0 %1.4e\n",opts_eta0);
+    PetscPrintf(PETSC_COMM_WORLD,"  params: eta1 %1.4e\n",opts_eta1);
+
+    been_here = PETSC_TRUE;
+  }
+
+  size_x = 1.0;
+  ierr = PetscOptionsGetReal(NULL,NULL,"-size_x",&size_x,NULL);CHKERRQ(ierr);/* This is a hack */
+  if (eta) { 
+    PetscReal xrel = coor[0]/size_x;
+    *eta = xrel*opts_eta0 + (1-xrel)*opts_eta1; /* simple linear interp. This doesn't actually hit the boundary values */
+  }
+  if (Fu) {
+    Fu[0] = 0.0;
+    Fu[1] = 0.0; 
+    Fu[2] = 1.0; /* Uniform forcing in z direction */
+  }
+  if (Fp) {
+    Fp[0] = 0.0;
+  }
+	PetscFunctionReturn(0);
 }
 #endif
 /*****************************************************************************/
