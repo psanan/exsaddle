@@ -18,11 +18,11 @@ ModelType: StokesXSinker
 -options_left
 -saddle_ksp_monitor_short
 -saddle_ksp_pc_side right
--saddle_mg_coarse_redundant_pc_factor_mat_solver_package umfpack
+-saddle_mg_coarse_redundant_pc_factor_mat_solver_type umfpack
 -saddle_mg_levels_ksp_type gmres
 -saddle_mg_levels_pc_asm_dm_subdomains
 -saddle_mg_levels_pc_type asm
--saddle_mg_levels_sub_pc_factor_mat_solver_package umfpack
+-saddle_mg_levels_sub_pc_factor_mat_solver_type umfpack
 -saddle_mg_levels_sub_pc_type lu
 #End of PETSc Option Table entries
 There are no unused options.

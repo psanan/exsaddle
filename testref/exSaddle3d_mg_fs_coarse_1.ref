@@ -20,29 +20,29 @@ ModelType: StokesXSinker
  12 KSP Residual norm 8.52032e-05 
  13 KSP Residual norm 5.89072e-05 
 Linear saddle_ solve converged due to CONVERGED_RTOL iterations 13
-KSP Object:(saddle_) 1 MPI processes
+KSP Object: (saddle_) 1 MPI processes
   type: gmres
-    GMRES: restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
-    GMRES: happy breakdown tolerance 1e-30
+    restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+    happy breakdown tolerance 1e-30
   maximum iterations=10000, initial guess is zero
   tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
   left preconditioning
   using PRECONDITIONED norm type for convergence test
-PC Object:(saddle_) 1 MPI processes
+PC Object: (saddle_) 1 MPI processes
   type: mg
-    MG: type is MULTIPLICATIVE, levels=2 cycles=v
+    type is MULTIPLICATIVE, levels=2 cycles=v
       Cycles per PCApply=1
       Not using Galerkin computed coarse grid matrices
   Coarse grid solver -- level -------------------------------
-    KSP Object:    (saddle_mg_coarse_)     1 MPI processes
+    KSP Object: (saddle_mg_coarse_) 1 MPI processes
       type: fgmres
-        GMRES: restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
-        GMRES: happy breakdown tolerance 1e-30
+        restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+        happy breakdown tolerance 1e-30
       maximum iterations=10000, initial guess is zero
       tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
       right preconditioning
       using UNPRECONDITIONED norm type for convergence test
-    PC Object:    (saddle_mg_coarse_)     1 MPI processes
+    PC Object: (saddle_mg_coarse_) 1 MPI processes
       type: fieldsplit
         FieldSplit with Schur preconditioner, factorization UPPER
         Preconditioner for the Schur complement formed from user provided matrix
@@ -50,115 +50,114 @@ PC Object:(saddle_) 1 MPI processes
         Split number 0 Defined by IS
         Split number 1 Defined by IS
         KSP solver for A00 block
-          KSP Object:          (saddle_mg_coarse_fieldsplit_u_)           1 MPI processes
+          KSP Object: (saddle_mg_coarse_fieldsplit_u_) 1 MPI processes
             type: gmres
-              GMRES: restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
-              GMRES: happy breakdown tolerance 1e-30
+              restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+              happy breakdown tolerance 1e-30
             maximum iterations=10000, initial guess is zero
             tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
             left preconditioning
             using PRECONDITIONED norm type for convergence test
-          PC Object:          (saddle_mg_coarse_fieldsplit_u_)           1 MPI processes
+          PC Object: (saddle_mg_coarse_fieldsplit_u_) 1 MPI processes
             type: jacobi
             linear system matrix = precond matrix:
-            Mat Object:            (saddle_mg_coarse_fieldsplit_u_)             1 MPI processes
+            Mat Object: (saddle_mg_coarse_fieldsplit_u_) 1 MPI processes
               type: seqaij
               rows=375, cols=375
               total: nonzeros=44217, allocated nonzeros=44217
-              total number of mallocs used during MatSetValues calls =0
+              total number of mallocs used during MatSetValues calls=0
                 using I-node routines: found 125 nodes, limit used is 5
         KSP solver for S = A11 - A10 inv(A00) A01 
-          KSP Object:          (saddle_mg_coarse_fieldsplit_p_)           1 MPI processes
+          KSP Object: (saddle_mg_coarse_fieldsplit_p_) 1 MPI processes
             type: gmres
-              GMRES: restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
-              GMRES: happy breakdown tolerance 1e-30
+              restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+              happy breakdown tolerance 1e-30
             maximum iterations=10000, initial guess is zero
             tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
             left preconditioning
             using PRECONDITIONED norm type for convergence test
-          PC Object:          (saddle_mg_coarse_fieldsplit_p_)           1 MPI processes
+          PC Object: (saddle_mg_coarse_fieldsplit_p_) 1 MPI processes
             type: jacobi
             linear system matrix followed by preconditioner matrix:
-            Mat Object:            (saddle_mg_coarse_fieldsplit_p_)             1 MPI processes
+            Mat Object: (saddle_mg_coarse_fieldsplit_p_) 1 MPI processes
               type: schurcomplement
               rows=27, cols=27
                 Schur complement A11 - A10 inv(A00) A01
                 A11
-                  Mat Object:                  (saddle_mg_coarse_fieldsplit_p_)                   1 MPI processes
+                  Mat Object: (saddle_mg_coarse_fieldsplit_p_) 1 MPI processes
                     type: seqaij
                     rows=27, cols=27
                     total: nonzeros=343, allocated nonzeros=343
-                    total number of mallocs used during MatSetValues calls =0
+                    total number of mallocs used during MatSetValues calls=0
                       not using I-node routines
                 A10
-                  Mat Object:                   1 MPI processes
+                  Mat Object: 1 MPI processes
                     type: seqaij
                     rows=27, cols=375
                     total: nonzeros=3993, allocated nonzeros=3993
-                    total number of mallocs used during MatSetValues calls =0
+                    total number of mallocs used during MatSetValues calls=0
                       not using I-node routines
                 KSP of A00
-                  KSP Object:                  (saddle_mg_coarse_fieldsplit_u_)                   1 MPI processes
+                  KSP Object: (saddle_mg_coarse_fieldsplit_u_) 1 MPI processes
                     type: gmres
-                      GMRES: restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
-                      GMRES: happy breakdown tolerance 1e-30
+                      restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+                      happy breakdown tolerance 1e-30
                     maximum iterations=10000, initial guess is zero
                     tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
                     left preconditioning
                     using PRECONDITIONED norm type for convergence test
-                  PC Object:                  (saddle_mg_coarse_fieldsplit_u_)                   1 MPI processes
+                  PC Object: (saddle_mg_coarse_fieldsplit_u_) 1 MPI processes
                     type: jacobi
                     linear system matrix = precond matrix:
-                    Mat Object:                    (saddle_mg_coarse_fieldsplit_u_)                     1 MPI processes
+                    Mat Object: (saddle_mg_coarse_fieldsplit_u_) 1 MPI processes
                       type: seqaij
                       rows=375, cols=375
                       total: nonzeros=44217, allocated nonzeros=44217
-                      total number of mallocs used during MatSetValues calls =0
+                      total number of mallocs used during MatSetValues calls=0
                         using I-node routines: found 125 nodes, limit used is 5
                 A01
-                  Mat Object:                   1 MPI processes
+                  Mat Object: 1 MPI processes
                     type: seqaij
                     rows=375, cols=27
                     total: nonzeros=3993, allocated nonzeros=3993
-                    total number of mallocs used during MatSetValues calls =0
+                    total number of mallocs used during MatSetValues calls=0
                       using I-node routines: found 125 nodes, limit used is 5
-            Mat Object:            Mpscaled_coarse             1 MPI processes
+            Mat Object: Mpscaled_coarse 1 MPI processes
               type: seqaij
               rows=27, cols=27
               total: nonzeros=343, allocated nonzeros=343
-              total number of mallocs used during MatSetValues calls =0
+              total number of mallocs used during MatSetValues calls=0
                 not using I-node routines
       linear system matrix = precond matrix:
-      Mat Object:       1 MPI processes
+      Mat Object: 1 MPI processes
         type: seqaij
         rows=402, cols=402
         total: nonzeros=52546, allocated nonzeros=100794
-        total number of mallocs used during MatSetValues calls =0
+        total number of mallocs used during MatSetValues calls=0
           using I-node routines: found 152 nodes, limit used is 5
   Down solver (pre-smoother) on level 1 -------------------------------
-    KSP Object:    (saddle_mg_levels_1_)     1 MPI processes
+    KSP Object: (saddle_mg_levels_1_) 1 MPI processes
       type: gmres
-        GMRES: restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
-        GMRES: happy breakdown tolerance 1e-30
-      maximum iterations=2
+        restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+        happy breakdown tolerance 1e-30
+      maximum iterations=2, nonzero initial guess
       tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
       left preconditioning
-      using nonzero initial guess
       using NONE norm type for convergence test
-    PC Object:    (saddle_mg_levels_1_)     1 MPI processes
+    PC Object: (saddle_mg_levels_1_) 1 MPI processes
       type: jacobi
       linear system matrix = precond matrix:
-      Mat Object:      Asaddle       1 MPI processes
+      Mat Object: Asaddle 1 MPI processes
         type: seqaij
         rows=2312, cols=2312
         total: nonzeros=381196, allocated nonzeros=542628
-        total number of mallocs used during MatSetValues calls =0
+        total number of mallocs used during MatSetValues calls=0
           using I-node routines: found 854 nodes, limit used is 5
   Up solver (post-smoother) same as down solver (pre-smoother)
   linear system matrix = precond matrix:
-  Mat Object:  Asaddle   1 MPI processes
+  Mat Object: Asaddle 1 MPI processes
     type: seqaij
     rows=2312, cols=2312
     total: nonzeros=381196, allocated nonzeros=542628
-    total number of mallocs used during MatSetValues calls =0
+    total number of mallocs used during MatSetValues calls=0
       using I-node routines: found 854 nodes, limit used is 5

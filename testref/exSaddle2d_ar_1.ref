@@ -6,14 +6,14 @@ ModelType: StokesSolCx
   params: nz   1
   Residual norms for saddle_ solve.
   0 KSP Residual norm 0.000218813 
-  1 KSP Residual norm 1.22451e-05 
-  2 KSP Residual norm 2.56968e-06 
-  3 KSP Residual norm 2.2556e-06 
-  4 KSP Residual norm 2.43808e-07 
-  5 KSP Residual norm 2.75584e-08 
-  6 KSP Residual norm 3.20309e-09 
-  7 KSP Residual norm 2.28778e-09 
-  8 KSP Residual norm 2.057e-10 
+  1 KSP Residual norm 1.22721e-05 
+  2 KSP Residual norm 2.57817e-06 
+  3 KSP Residual norm 2.2949e-06 
+  4 KSP Residual norm 1.07848e-07 
+  5 KSP Residual norm 1.69056e-08 
+  6 KSP Residual norm 3.71617e-09 
+  7 KSP Residual norm 2.55284e-09 
+  8 KSP Residual norm 6.650e-10 
 #PETSc Option Table entries:
 -fs
 -model 0
@@ -24,7 +24,7 @@ ModelType: StokesSolCx
 -saddle_fieldsplit_p_pc_type bjacobi
 -saddle_fieldsplit_u_ksp_rtol 1e-2
 -saddle_fieldsplit_u_ksp_type gcr
--saddle_fieldsplit_u_mg_coarse_pc_factor_mat_solver_package umfpack
+-saddle_fieldsplit_u_mg_coarse_pc_factor_mat_solver_type umfpack
 -saddle_fieldsplit_u_mg_levels_ksp_chebyshev_esteig 0,0.2,0,1.1
 -saddle_fieldsplit_u_mg_levels_ksp_max_it 8
 -saddle_fieldsplit_u_mg_levels_ksp_norm_type none
