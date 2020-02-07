@@ -335,7 +335,7 @@ PetscErrorCode SaddleSolve_Q2Q1()
     ierr = KSPGetPC(ksp,&pc);CHKERRQ(ierr);
     ierr = PCSetType(pc,PCMG);CHKERRQ(ierr);
     ierr = PCMGSetLevels(pc,nlevels,NULL);CHKERRQ(ierr);
-    ierr = PCMGSetGalerkin(pc,PETSC_FALSE);CHKERRQ(ierr);
+    ierr = PCMGSetGalerkin(pc,PC_MG_GALERKIN_NONE);CHKERRQ(ierr);
     for (k=1; k<nlevels; k++) {
       KSP ksp_smooth;
       Mat P;
@@ -522,7 +522,7 @@ PetscErrorCode SaddleSolve_Q2Q1()
         char name[PETSC_MAX_PATH_LEN];
         ierr = PCMGGetSmoother(pc,k,&ksp_smoother);CHKERRQ(ierr);
         ierr = PetscSNPrintf(name,PETSC_MAX_PATH_LEN-1,"smoother_%D",k);CHKERRQ(ierr);
-        ierr = KSPComputeExplicitOperator(ksp_smoother,&S);CHKERRQ(ierr);
+        ierr = KSPComputeOperator(ksp_smoother,NULL,&S);CHKERRQ(ierr);
         ierr = DumpOperator(S,name);CHKERRQ(ierr);
         ierr = MatDestroy(&S);CHKERRQ(ierr);
       }

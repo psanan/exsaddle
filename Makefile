@@ -261,14 +261,14 @@ test_exSaddle2d_2 :
 	   ${RM} -f exSaddle2d_2.tmp
 
 test_exSaddle2d_mg_1 :
-	-@${MPIEXEC} -n 1  ./exSaddle2d -model 0 -mx 16 -mg -nlevels 3 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_pc_factor_mat_solver_package umfpack > exSaddle2d_mg_1.tmp 2>&1;	  \
+	-@${MPIEXEC} -n 1  ./exSaddle2d -model 0 -mx 16 -mg -nlevels 3 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_pc_factor_mat_solver_type umfpack > exSaddle2d_mg_1.tmp 2>&1;	  \
 	   if (${DIFF} testref/exSaddle2d_mg_1.ref exSaddle2d_mg_1.tmp) then true; \
 	   else printf "${PWD}\nPossible problem with with exSaddle2d_mg_1, diffs above\n=========================================\n"; fi; \
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle2d_mg_1.tmp testref/exSaddle2d_mg_1.ref; fi; \
 	   ${RM} -f exSaddle2d_mg_1.tmp
 
 test_exSaddle2d_mg_2 :
-	-@${MPIEXEC} -n 2 ./exSaddle2d  -model 0 -mx 16 -mg -nlevels 3 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_redundant_pc_factor_mat_solver_package umfpack > exSaddle2d_mg_2.tmp 2>&1;	  \
+	-@${MPIEXEC} -n 2 ./exSaddle2d  -model 0 -mx 16 -mg -nlevels 3 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_redundant_pc_factor_mat_solver_type umfpack > exSaddle2d_mg_2.tmp 2>&1;	  \
 	   if (${DIFF} testref/exSaddle2d_mg_2.ref exSaddle2d_mg_2.tmp) then true; \
 	   else printf "${PWD}\nPossible problem with with exSaddle2d_mg_2, diffs above\n=========================================\n"; fi; \
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle2d_mg_2.tmp testref/exSaddle2d_mg_2.ref; fi; \
@@ -289,14 +289,14 @@ test_exSaddle2d_fs_2 :
 	   ${RM} -f exSaddle2d_fs_2.tmp
 
 test_exSaddle2d_asm_1 :
-	-@${MPIEXEC} -n 9 ./exSaddle2d -mx 12 -saddle_pc_type asm -saddle_pc_asm_dm_subdomains -set_ksp_dm -options_left -saddle_ksp_monitor_short -saddle_sub_ksp_type preonly -saddle_sub_pc_type lu -saddle_sub_pc_factor_mat_solver_package umfpack -dmdafe_overlap 1 > exSaddle2d_asm_1.tmp 2>&1; \
+	-@${MPIEXEC} -n 9 ./exSaddle2d -mx 12 -saddle_pc_type asm -saddle_pc_asm_dm_subdomains -set_ksp_dm -options_left -saddle_ksp_monitor_short -saddle_sub_ksp_type preonly -saddle_sub_pc_type lu -saddle_sub_pc_factor_mat_solver_type umfpack -dmdafe_overlap 1 > exSaddle2d_asm_1.tmp 2>&1; \
 	   if (${DIFF} testref/exSaddle2d_asm_1.ref exSaddle2d_asm_1.tmp) then true; \
 	   else printf "${PWD}\nPossible problem with with exSaddle2d_asm_1, diffs above\n=========================================\n"; fi; \
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle2d_asm_1.tmp testref/exSaddle2d_asm_1.ref; fi; \
 	   ${RM} -f exSaddle2d_asm_1.tmp
 
 test_exSaddle2d_mms_1 :
-	-@${MPIEXEC} ./exSaddle2d -saddle_pc_type lu -saddle_pc_factor_mat_solver_package umfpack -model 101 -check_solution -saddle_ksp_monitor_short  -mx 16 -constant_pressure_nullspace > exSaddle2d_mms_1.tmp 2>&1; \
+	-@${MPIEXEC} ./exSaddle2d -saddle_pc_type lu -saddle_pc_factor_mat_solver_type umfpack -model 101 -check_solution -saddle_ksp_monitor_short  -mx 16 -constant_pressure_nullspace > exSaddle2d_mms_1.tmp 2>&1; \
 	   if (${DIFF} testref/exSaddle2d_mms_1.ref exSaddle2d_mms_1.tmp) then true; \
 	   else printf "${PWD}\nPossible problem with with exSaddle2d_mms_1, diffs above\n=========================================\n"; fi; \
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle2d_mms_1.tmp testref/exSaddle2d_mms_1.ref; fi; \
@@ -325,14 +325,14 @@ test_exSaddle2d_lame_2 :
 	   ${RM} -f exSaddle2d_lame_2.tmp
 
 test_exSaddle2d_lame_mg_1 :
-	-@${MPIEXEC} -n 1 ./exSaddle2d_lame  -mx 16 -mg -nlevels 3 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_pc_factor_mat_solver_package umfpack > exSaddle2d_lame_mg_1.tmp 2>&1;	  \
+	-@${MPIEXEC} -n 1 ./exSaddle2d_lame  -mx 16 -mg -nlevels 3 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_pc_factor_mat_solver_type umfpack > exSaddle2d_lame_mg_1.tmp 2>&1;	  \
 	   if (${DIFF} testref/exSaddle2d_lame_mg_1.ref exSaddle2d_lame_mg_1.tmp) then true; \
 	   else printf "${PWD}\nPossible problem with with exSaddle2d_lame_mg_1, diffs above\n=========================================\n"; fi; \
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle2d_lame_mg_1.tmp testref/exSaddle2d_lame_mg_1.ref; fi; \
 	   ${RM} -f exSaddle2d_lame_mg_1.tmp
 
 test_exSaddle2d_lame_mg_2 :
-	-@${MPIEXEC} -n 2 ./exSaddle2d_lame  -mx 16 -mg -nlevels 3 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_redundant_pc_factor_mat_solver_package umfpack > exSaddle2d_lame_mg_2.tmp 2>&1;	  \
+	-@${MPIEXEC} -n 2 ./exSaddle2d_lame  -mx 16 -mg -nlevels 3 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_redundant_pc_factor_mat_solver_type umfpack > exSaddle2d_lame_mg_2.tmp 2>&1;	  \
 	   if (${DIFF} testref/exSaddle2d_lame_mg_2.ref exSaddle2d_lame_mg_2.tmp) then true; \
 	   else printf "${PWD}\nPossible problem with with exSaddle2d_lame_mg_2, diffs above\n=========================================\n"; fi; \
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle2d_lame_mg_2.tmp testref/exSaddle2d_lame_mg_2.ref; fi; \
@@ -367,14 +367,14 @@ test_exSaddle3d_2 :
 	   ${RM} -f exSaddle3d_2.tmp
 
 test_exSaddle3d_mg_1 :
-	-@${MPIEXEC} -n 1 ./exSaddle3d -model 2 -sinker_n 1 -mx 8 -mg -nlevels 2 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_pc_factor_mat_solver_package umfpack > exSaddle3d_mg_1.tmp 2>&1;	  \
+	-@${MPIEXEC} -n 1 ./exSaddle3d -model 2 -sinker_n 1 -mx 8 -mg -nlevels 2 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_pc_factor_mat_solver_type umfpack > exSaddle3d_mg_1.tmp 2>&1;	  \
 	   if (${DIFF} testref/exSaddle3d_mg_1.ref exSaddle3d_mg_1.tmp) then true; \
 	   else printf "${PWD}\nPossible problem with with exSaddle3d_mg_1, diffs above\n=========================================\n"; fi; \
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle3d_mg_1.tmp testref/exSaddle3d_mg_1.ref; fi; \
 	   ${RM} -f exSaddle3d_mg_1.tmp
 
 test_exSaddle3d_mg_2 :
-	-@${MPIEXEC} -n 2 ./exSaddle3d -model 2 -sinker_n 1 -mx 8 -mg -nlevels 2 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_redundant_pc_factor_mat_solver_package umfpack > exSaddle3d_mg_2.tmp 2>&1;	  \
+	-@${MPIEXEC} -n 2 ./exSaddle3d -model 2 -sinker_n 1 -mx 8 -mg -nlevels 2 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_redundant_pc_factor_mat_solver_type umfpack > exSaddle3d_mg_2.tmp 2>&1;	  \
 	   if (${DIFF} testref/exSaddle3d_mg_2.ref exSaddle3d_mg_2.tmp) then true; \
 	   else printf "${PWD}\nPossible problem with with exSaddle3d_mg_2, diffs above\n=========================================\n"; fi; \
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle3d_mg_2.tmp testref/exSaddle3d_mg_2.ref; fi; \
@@ -402,14 +402,14 @@ test_exSaddle3d_fs_2 :
 	   ${RM} -f exSaddle3d_fs_2.tmp
 
 test_exSaddle3d_asm_1 :
-	-@${MPIEXEC} -n 8 ./exSaddle3d -mx 6 -saddle_pc_type asm -saddle_pc_asm_dm_subdomains -set_ksp_dm -options_left -saddle_ksp_monitor_short -saddle_sub_ksp_type preonly -saddle_sub_pc_type lu -saddle_sub_pc_factor_mat_solver_package umfpack> exSaddle3d_asm_1.tmp 2>&1;	  \
+	-@${MPIEXEC} -n 8 ./exSaddle3d -mx 6 -saddle_pc_type asm -saddle_pc_asm_dm_subdomains -set_ksp_dm -options_left -saddle_ksp_monitor_short -saddle_sub_ksp_type preonly -saddle_sub_pc_type lu -saddle_sub_pc_factor_mat_solver_type umfpack> exSaddle3d_asm_1.tmp 2>&1;	  \
 	   if (${DIFF} testref/exSaddle3d_asm_1.ref exSaddle3d_asm_1.tmp) then true; \
 	   else printf "${PWD}\nPossible problem with with exSaddle3d_asm_1, diffs above\n=========================================\n"; fi; \
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle3d_asm_1.tmp testref/exSaddle3d_asm_1.ref; fi; \
 	   ${RM} -f exSaddle3d_asm_1.tmp
 
 test_exSaddle3d_mg_asm_1 :
-	-@${MPIEXEC} -n 4 ./exSaddle3d -options_left -mg -nlevels 2 -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type asm -saddle_mg_levels_pc_asm_dm_subdomains -dmdafe_overlap 1 -saddle_ksp_monitor_short -saddle_ksp_pc_side right -saddle_mg_coarse_redundant_pc_factor_mat_solver_package umfpack -saddle_mg_levels_sub_pc_type lu -saddle_mg_levels_sub_pc_factor_mat_solver_package umfpack -mx 6 -my 4 -mz 4 > exSaddle3d_mg_asm_1.tmp 2>&1;	  \
+	-@${MPIEXEC} -n 4 ./exSaddle3d -options_left -mg -nlevels 2 -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type asm -saddle_mg_levels_pc_asm_dm_subdomains -dmdafe_overlap 1 -saddle_ksp_monitor_short -saddle_ksp_pc_side right -saddle_mg_coarse_redundant_pc_factor_mat_solver_type umfpack -saddle_mg_levels_sub_pc_type lu -saddle_mg_levels_sub_pc_factor_mat_solver_type umfpack -mx 6 -my 4 -mz 4 > exSaddle3d_mg_asm_1.tmp 2>&1;	  \
 	   if (${DIFF} testref/exSaddle3d_mg_asm_1.ref exSaddle3d_mg_asm_1.tmp) then true; \
 	   else printf "${PWD}\nPossible problem with with exSaddle3d_mg_asm_1, diffs above\n=========================================\n"; fi; \
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle3d_mg_asm_1.tmp testref/exSaddle3d_mg_asm_1.ref; fi; \
@@ -458,14 +458,14 @@ test_exSaddle3d_lame_5 :
 	   ${RM} -f exSaddle3d_lame_5.tmp
 
 test_exSaddle3d_lame_mg_1 :
-	-@${MPIEXEC} -n 1 ./exSaddle3d_lame -model 6 -mx 6 -mg -nlevels 2 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_pc_factor_mat_solver_package umfpack > exSaddle3d_lame_mg_1.tmp 2>&1;\
+	-@${MPIEXEC} -n 1 ./exSaddle3d_lame -model 6 -mx 6 -mg -nlevels 2 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_pc_factor_mat_solver_type umfpack > exSaddle3d_lame_mg_1.tmp 2>&1;\
 	   if (${DIFF} testref/exSaddle3d_lame_mg_1.ref exSaddle3d_lame_mg_1.tmp) then true; \
 	   else printf "${PWD}\nPossible problem with with exSaddle3d_lame_mg_1, diffs above\n=========================================\n"; fi; \
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle3d_lame_mg_1.tmp testref/exSaddle3d_lame_mg_1.ref; fi; \
 	   ${RM} -f exSaddle3d_lame_mg_1.tmp
 
 test_exSaddle3d_lame_mg_2 :
-	-@${MPIEXEC} -n 2 ./exSaddle3d_lame -model 6 -mx 6 -mg -nlevels 2 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_redundant_pc_factor_mat_solver_package umfpack > exSaddle3d_lame_mg_2.tmp 2>&1;	  \
+	-@${MPIEXEC} -n 2 ./exSaddle3d_lame -model 6 -mx 6 -mg -nlevels 2 -diagnostics -saddle_ksp_type fgmres -saddle_mg_levels_ksp_type gmres -saddle_mg_levels_pc_type jacobi -saddle_mg_levels_ksp_max_it 10 -saddle_ksp_monitor_short -saddle_mg_coarse_redundant_pc_factor_mat_solver_type umfpack > exSaddle3d_lame_mg_2.tmp 2>&1;	  \
 	   if (${DIFF} testref/exSaddle3d_lame_mg_2.ref exSaddle3d_lame_mg_2.tmp) then true; \
 	   else printf "${PWD}\nPossible problem with with exSaddle3d_lame_mg_2, diffs above\n=========================================\n"; fi; \
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle3d_lame_mg_2.tmp testref/exSaddle3d_lame_mg_2.ref; fi; \

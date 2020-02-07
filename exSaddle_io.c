@@ -98,7 +98,7 @@ PetscErrorCode DumpPreconditioner(KSP ksp,const char* name)
   PetscFunctionBeginUser;
   ierr = PetscPrintf(PETSC_COMM_WORLD,"Dumping explicit PC to %s. This could be very slow!\n",name);CHKERRQ(ierr);
   ierr = KSPGetPC(ksp,&pc);CHKERRQ(ierr);
-  ierr = PCComputeExplicitOperator(pc,&B);CHKERRQ(ierr); /* Slow */
+  ierr = PCComputeOperator(pc,NULL,&B);CHKERRQ(ierr); /* Slow */
   ierr = PetscViewerBinaryOpen(PETSC_COMM_WORLD,name,FILE_MODE_WRITE,&viewer);CHKERRQ(ierr);
   ierr = MatView(B,viewer);CHKERRQ(ierr);
   ierr = PetscViewerDestroy(&viewer);CHKERRQ(ierr);
@@ -116,7 +116,7 @@ PetscErrorCode DumpPreconditionedOperator(KSP ksp,const char* name)
 
   PetscFunctionBeginUser;
   ierr = PetscPrintf(PETSC_COMM_WORLD,"Dumping preconditioned operator to %s. This could be very slow!\n",name);CHKERRQ(ierr);
-  ierr = KSPComputeExplicitOperator(ksp,&M);CHKERRQ(ierr); /* Slow */
+  ierr = KSPComputeOperator(ksp,NULL,&M);CHKERRQ(ierr); /* Slow */
   ierr = PetscViewerBinaryOpen(PETSC_COMM_WORLD,name,FILE_MODE_WRITE,&viewer);CHKERRQ(ierr);
   ierr = MatView(M,viewer);CHKERRQ(ierr);
   ierr = PetscViewerDestroy(&viewer);CHKERRQ(ierr);
@@ -136,7 +136,7 @@ PetscErrorCode ViewFields(DM dm_saddle,Vec X,const char* tag)
 
   PetscFunctionBeginUser;
   ierr = DMCompositeGetEntries(dm_saddle,&dmv,&dmp);CHKERRQ(ierr);
-  ierr = DMDAGetReducedDMDA(dmv,1,&dmn);CHKERRQ(ierr); /* nodal dmda */
+  ierr = DMDACreateCompatibleDMDA(dmv,1,&dmn);CHKERRQ(ierr); /* nodal dmda */
   ierr = DMDASetFieldName(dmn,0,"");CHKERRQ(ierr);
   ierr = DMCreateGlobalVector(dmn,&scalar);CHKERRQ(ierr);
 
