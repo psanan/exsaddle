@@ -1088,7 +1088,7 @@ static PetscErrorCode _DMCreate_SaddleQ2_BuildElementLayout(DM dm,PetscInt s_el[
   
   ierr = DMDAGetGhostCorners(dm,&s_l[0],&s_l[1],&s_l[2],&m_l[0],&m_l[1],&m_l[2]);CHKERRQ(ierr); /* local space */
   ierr = DMDAGetCorners(dm,&s_g[0],&s_g[1],&s_g[2],&m_g[0],&m_g[1],&m_g[2]);CHKERRQ(ierr); /* global space */
-  ierr = DMDAGetInfo(dm,&dim,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);CHKERRQ(ierr);
+  ierr = DMGetDimension(dm,&dim);CHKERRQ(ierr);
  
   for (i=0; i<dim; ++i){
     s_el[i]  = -1;
