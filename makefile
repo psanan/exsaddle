@@ -9,7 +9,7 @@
 
 # If you wish to build with PCILDL or PCILUPACK, define EXSADDLE_WITH_PCILDL or EXSADDLE_WITH_PCILUPACK, respectively, e.g.
 # To be extra careful, we force you to set ILUPACK_PLATFORM
-#  make EXSADDLE_WITH_PCILDL=1 ILUPLATFORM=GNU64
+#  make EXSADDLE_WITH_PCILDL=1 ILUPACK_PLATFORM=GNU64
 
 ifdef EXSADDLE_WITH_PCILUPACK
 EXSADDLE_WITH_CUSTOMPC=1
@@ -29,12 +29,12 @@ endif
 
 ILUPACK_DIR = ilupack
 ILUPACK_INCLUDE=-I${ILUPACK_DIR}/include
-ILUPACK_LIBS=-Lilupack/lib/${ILUPACK_PLATFORM} -lilupack_mc64  -lmetisomp -lmetis -lmetisomp -lcamd -lamd -lsuitesparseconfig -lsparspak -llapack -lblaslike -lblas 
+ILUPACK_LIBS=-L${ILUPACK_DIR}/lib/${ILUPACK_PLATFORM} -lilupack_mc64  -lmetisomp -lmetis -lmetisomp -lcamd -lamd -lsuitesparseconfig -lsparspak -llapack -lblaslike -lblas
 
 # You need to build these by hand (see ilupack/notdistributed/README). 
 # This will likely involve commands like:
 #     gfortran -O3 -fPIC mc64d.f -o MC64D.f
-ILUPACK_LIBS+=ilupack/notdistributed/MC64D.o ilupack/notdistributed/MC21D.o ilupack/notdistributed/MC64S.o ilupack/notdistributed/MC21S.o
+ILUPACK_LIBS+=${ILUPACK_DIR}/notdistributed/MC64D.o ${ILUPACK_DIR}/notdistributed/MC21D.o ${ILUPACK_DIR}/notdistributed/MC64S.o ${ILUPACK_DIR}/notdistributed/MC21S.o
 
 endif
 
