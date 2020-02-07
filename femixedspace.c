@@ -1157,6 +1157,7 @@ PetscErrorCode DMCreate_SaddleQ2Q1(MPI_Comm comm,PetscInt mx,PetscInt my,PetscIn
   ierr = DMDACreate3d(comm,DM_BOUNDARY_NONE,DM_BOUNDARY_NONE,DM_BOUNDARY_NONE,DMDA_STENCIL_BOX,
                       2*mx+1,2*my+1,2*mz+1,PETSC_DECIDE,PETSC_DECIDE,PETSC_DECIDE,U_DOFS,stencil_width,NULL,NULL,NULL,&dm_vel);CHKERRQ(ierr);
 #endif
+  ierr = DMSetUp(dm_vel);CHKERRQ(ierr);
   ierr = DMDASetUniformCoordinates(dm_vel,0.0,1.0,0.0,1.0,0.0,1.0);CHKERRQ(ierr);
   ierr = DMDAGetInfo(dm_vel,0,0,0,0,&np[0],&np[1],&np[2],0,0,0,0,0,0);CHKERRQ(ierr);
   ierr = _DMCreate_SaddleQ2_BuildElementLayout(dm_vel,s_el,e_el);CHKERRQ(ierr);
@@ -1247,6 +1248,7 @@ PetscErrorCode DMCreate_SaddleQ2Q1(MPI_Comm comm,PetscInt mx,PetscInt my,PetscIn
     ierr = DMDACreate3d(comm,DM_BOUNDARY_NONE,DM_BOUNDARY_NONE,DM_BOUNDARY_NONE,DMDA_STENCIL_BOX,
         mx+1,my+1,mz+1,np[0],np[1],np[2],P_DOFS,stencil_width,npoints_i,npoints_j,npoints_k,&dm_p);CHKERRQ(ierr);
 #endif
+    ierr = DMSetUp(dm_p);CHKERRQ(ierr);
 
     PetscFree(npoints_i);
     PetscFree(npoints_j);
