@@ -1391,6 +1391,7 @@ static PetscErrorCode solve_stokes_3d_coupled(PetscInt mx,PetscInt my,PetscInt m
   stencil_width = 1;
   ierr          = DMDACreate3d(PETSC_COMM_WORLD,DM_BOUNDARY_NONE,DM_BOUNDARY_NONE,DM_BOUNDARY_NONE,DMDA_STENCIL_BOX,
                                mx+1,my+1,mz+1,PETSC_DECIDE,PETSC_DECIDE,PETSC_DECIDE,dof,stencil_width,NULL,NULL,NULL,&da_Stokes);CHKERRQ(ierr);
+  ierr = DMSetUp(da_Stokes);CHKERRQ(ierr);
   ierr = DMDASetFieldName(da_Stokes,0,"Vx");CHKERRQ(ierr);
   ierr = DMDASetFieldName(da_Stokes,1,"Vy");CHKERRQ(ierr);
   ierr = DMDASetFieldName(da_Stokes,2,"Vz");CHKERRQ(ierr);
@@ -1550,7 +1551,7 @@ static PetscErrorCode solve_stokes_3d_coupled(PetscInt mx,PetscInt my,PetscInt m
     PC pc;
     
     ierr = KSPGetPC(ksp_S,&pc);CHKERRQ(ierr);
-    ierr = PCMGSetGalerkin(pc,PETSC_TRUE);CHKERRQ(ierr);
+    ierr = PCMGSetGalerkin(pc,PC_MG_GALERKIN_NONE);CHKERRQ(ierr);
     
   }
 
@@ -1578,7 +1579,7 @@ static PetscErrorCode solve_stokes_3d_coupled(PetscInt mx,PetscInt my,PetscInt m
       */
       ierr = PCSetUp(pc);CHKERRQ(ierr);
       
-      ierr = DMDAGetReducedDMDA(da_Stokes,3,&dm_u);CHKERRQ(ierr);
+      ierr = DMDACreateCompatibleDMDA(da_Stokes,3,&dm_u);CHKERRQ(ierr);
       ierr = PCFieldSplitGetSubKSP(pc,&nsplits,&subksp);CHKERRQ(ierr);
       ierr = KSPSetDM(subksp[0],dm_u);CHKERRQ(ierr);
       ierr = KSPSetDMActive(subksp[0],PETSC_FALSE);CHKERRQ(ierr);

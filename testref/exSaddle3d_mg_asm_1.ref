@@ -6,8 +6,9 @@ ModelType: StokesXSinker
   params: sinker radius 5.0000e-02
   Residual norms for saddle_ solve.
   0 KSP Residual norm 0.0406018 
-  1 KSP Residual norm 1.6863e-06 
-  2 KSP Residual norm 2.48503e-09 
+  1 KSP Residual norm 0.000115702 
+  2 KSP Residual norm 1.81578e-06 
+  3 KSP Residual norm 4.65349e-08 
 #PETSc Option Table entries:
 -dmdafe_overlap 1
 -mg
@@ -18,11 +19,11 @@ ModelType: StokesXSinker
 -options_left
 -saddle_ksp_monitor_short
 -saddle_ksp_pc_side right
--saddle_mg_coarse_redundant_pc_factor_mat_solver_package umfpack
+-saddle_mg_coarse_redundant_pc_factor_mat_solver_type umfpack
 -saddle_mg_levels_ksp_type gmres
 -saddle_mg_levels_pc_asm_dm_subdomains
 -saddle_mg_levels_pc_type asm
--saddle_mg_levels_sub_pc_factor_mat_solver_package umfpack
+-saddle_mg_levels_sub_pc_factor_mat_solver_type umfpack
 -saddle_mg_levels_sub_pc_type lu
 #End of PETSc Option Table entries
 There are no unused options.

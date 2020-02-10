@@ -7,15 +7,17 @@ ModelType: StokesSolCx
   Residual norms for saddle_ solve.
   0 KSP Residual norm 0.00126252 
   Linear saddle_fieldsplit_u_ solve converged due to CONVERGED_RTOL iterations 7
-  1 KSP Residual norm 0.000272057 
+  1 KSP Residual norm 0.000271935 
   Linear saddle_fieldsplit_u_ solve converged due to CONVERGED_RTOL iterations 5
-  2 KSP Residual norm 7.53401e-05 
+  2 KSP Residual norm 7.54962e-05 
   Linear saddle_fieldsplit_u_ solve converged due to CONVERGED_RTOL iterations 5
-  3 KSP Residual norm 5.41562e-06 
+  3 KSP Residual norm 5.90741e-06 
+  Linear saddle_fieldsplit_u_ solve converged due to CONVERGED_RTOL iterations 7
+  4 KSP Residual norm 6.96439e-08 
   Linear saddle_fieldsplit_u_ solve converged due to CONVERGED_RTOL iterations 6
-  4 KSP Residual norm 7.9752e-08 
+  5 KSP Residual norm 1.43548e-08 
   Linear saddle_fieldsplit_u_ solve converged due to CONVERGED_RTOL iterations 6
-  5 KSP Residual norm 1.21956e-08 
+  6 KSP Residual norm 3.72674e-09 
 #PETSc Option Table entries:
 -fs
 -model 0
@@ -28,7 +30,7 @@ ModelType: StokesSolCx
 -saddle_fieldsplit_u_ksp_converged_reason
 -saddle_fieldsplit_u_ksp_rtol 1e-2
 -saddle_fieldsplit_u_ksp_type gcr
--saddle_fieldsplit_u_mg_coarse_pc_factor_mat_solver_package umfpack
+-saddle_fieldsplit_u_mg_coarse_pc_factor_mat_solver_type umfpack
 -saddle_fieldsplit_u_mg_levels_ksp_chebyshev_esteig 0,0.2,0,1.1
 -saddle_fieldsplit_u_mg_levels_ksp_max_it 8
 -saddle_fieldsplit_u_mg_levels_ksp_norm_type none
