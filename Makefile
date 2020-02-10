@@ -293,8 +293,9 @@ test_exSaddle2d_fs_2 :
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle2d_fs_2.tmp testref/exSaddle2d_fs_2.ref; fi; \
 	   ${RM} -f exSaddle2d_fs_2.tmp
 
+# This is a very unstable solve, only retained here for regression testing purposes:
 test_exSaddle2d_asm_1 :
-	-@${MPIEXEC} -n 9 ./exSaddle2d -mx 12 -saddle_pc_type asm -saddle_pc_asm_dm_subdomains -set_ksp_dm -options_left -saddle_ksp_monitor_short -saddle_sub_ksp_type preonly -saddle_sub_pc_type lu -saddle_sub_pc_factor_mat_solver_type umfpack -dmdafe_overlap 1 > exSaddle2d_asm_1.tmp 2>&1; \
+	-@${MPIEXEC} -n 9 ./exSaddle2d -mx 12 -saddle_pc_type asm -saddle_pc_asm_dm_subdomains -set_ksp_dm -options_left -saddle_ksp_monitor_short -saddle_sub_ksp_type preonly -saddle_sub_pc_type lu -saddle_sub_pc_factor_mat_solver_type umfpack -dmdafe_overlap 1 -saddle_ksp_rtol 1e-4 > exSaddle2d_asm_1.tmp 2>&1; \
 	   if (${DIFF} testref/exSaddle2d_asm_1.ref exSaddle2d_asm_1.tmp) then true; \
 	   else printf "${PWD}\nPossible problem with with exSaddle2d_asm_1, diffs above\n=========================================\n"; fi; \
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle2d_asm_1.tmp testref/exSaddle2d_asm_1.ref; fi; \

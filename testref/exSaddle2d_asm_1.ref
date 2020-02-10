@@ -17,17 +17,12 @@ ModelType: StokesXSinker
   9 KSP Residual norm 0.000663979 
  10 KSP Residual norm 0.000530644 
  11 KSP Residual norm 0.000214319 
- 12 KSP Residual norm 0.000205304 
- 13 KSP Residual norm 0.000138283 
- 14 KSP Residual norm 8.28526e-05 
- 15 KSP Residual norm 6.07143e-05 
- 16 KSP Residual norm 3.8654e-05 
- 17 KSP Residual norm 2.44142e-05 
 #PETSc Option Table entries:
 -dmdafe_overlap 1
 -mx 12
 -options_left
 -saddle_ksp_monitor_short
+-saddle_ksp_rtol 1e-4
 -saddle_pc_asm_dm_subdomains
 -saddle_pc_type asm
 -saddle_sub_ksp_type preonly
