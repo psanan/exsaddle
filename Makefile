@@ -161,7 +161,6 @@ models3d_lame.o : models.c models.h
 
 # --------------------------------------------------------------------------- #
 
-# These depend on you having the correct ILUPACK library available in ilupack/lib/${ILUPACK_PLATFORM}
 pcildl.o : pcildl.c pcildl.h
 	-${CC} ${PCC_FLAGS} ${CFLAGS} -c ${ILUPACK_INCLUDE} -I$(PETSC_DIR)/$(PETSC_ARCH)/include -I$(PETSC_DIR)/include -o $@ $<
 
@@ -169,13 +168,19 @@ pcilupack.o : pcilupack.c pcilupack.h
 	-${CC} ${PCC_FLAGS} ${CFLAGS} ${ILUPACK_INCLUDE} -c ${ILUPACK_INCLUDE} -I$(PETSC_DIR)/$(PETSC_ARCH)/include -I$(PETSC_DIR)/include -o $@ $<
 
 # --------------------------------------------------------------------------- #
-# Note: these tests are mainly intended as regression tests. The solvers here
-#       can be quite sensitive, and the examples below are NOT intended to
-#       be examples of efficient, or even numerically stable, solver choices.
-# Note: Some of these tests require UMFPACK. (Configure PETSc --download-suiteparse)
-#       PETSc's built-in LU does NOT work stably as a coarse grid solver for
-#       saddle point systems
-# Note: Do NOT configure PETSc with METIS, or things may fail
+# Tests
+#
+# * These tests are mainly intended as regression tests. The solvers here
+#   can be quite sensitive, and the examples below are NOT intended to
+#   be examples of efficient, or even numerically stable, solver choices.
+# * Some of these tests require UMFPACK. (Configure PETSc --download-suiteparse)
+#   PETSc's built-in LU does NOT work stably as a coarse grid solver for saddle point systems
+# * Do NOT configure PETSc with METIS, or things may fail
+# * Subdomain-based solves (e.g. ASM) rely on a custom (element-based) definition
+#   of subdomains which has not been thoroughly tested and which should be considered
+#   very experimental
+# * The diff-based approach here is obviously suboptimal and non-portable. It
+#   would be better to define tests with a tool like SciATH (github.com/sciath/sciath)
 
 # define this  to 1 to copy all test output to the corresponding reference file (Careful!)
 COPY_TEST_OUTPUT=0
@@ -505,6 +510,7 @@ test_exSaddle3d_pseudoice_1 :
 	   else printf "${PWD}\nPossible problem with with exSaddle3d_pseudoice_1, diffs above\n=========================================\n"; fi; \
 		 if [ ${COPY_TEST_OUTPUT} -eq 1 ] ; then cp exSaddle3d_pseudoice_1.tmp testref/exSaddle3d_pseudoice_1.ref; fi; \
 	   ${RM} -f exSaddle3d_pseudoice_1.tmp
+
 
 # --------------------------------------------------------------------------- #
 
