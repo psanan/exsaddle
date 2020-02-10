@@ -5,16 +5,30 @@ ModelType: StokesXSinker
   params: num sinkers 3
   params: sinker radius 5.0000e-02
   Residual norms for saddle_ solve.
-  0 KSP Residual norm 6.09034 
-  1 KSP Residual norm 5.65223 
-  2 KSP Residual norm 0.292749 
-  3 KSP Residual norm 0.110451 
-  4 KSP Residual norm 0.0324346 
-  5 KSP Residual norm 0.00965002 
-  6 KSP Residual norm 0.00284267 
-  7 KSP Residual norm 0.000457703 
-  8 KSP Residual norm 0.000161016 
-  9 KSP Residual norm 5.46772e-05 
+  0 KSP Residual norm 5.71082 
+  1 KSP Residual norm 4.5361 
+  2 KSP Residual norm 0.911885 
+  3 KSP Residual norm 0.42873 
+  4 KSP Residual norm 0.123472 
+  5 KSP Residual norm 0.0424282 
+  6 KSP Residual norm 0.010634 
+  7 KSP Residual norm 0.00858566 
+  8 KSP Residual norm 0.00704854 
+  9 KSP Residual norm 0.00606861 
+ 10 KSP Residual norm 0.00246916 
+ 11 KSP Residual norm 0.00152491 
+ 12 KSP Residual norm 0.00107646 
+ 13 KSP Residual norm 0.000908135 
+ 14 KSP Residual norm 0.000717447 
+ 15 KSP Residual norm 0.0006678 
+ 16 KSP Residual norm 0.000417669 
+ 17 KSP Residual norm 0.000297806 
+ 18 KSP Residual norm 0.000241861 
+ 19 KSP Residual norm 0.000237569 
+ 20 KSP Residual norm 0.000114948 
+ 21 KSP Residual norm 6.59823e-05 
+ 22 KSP Residual norm 6.15504e-05 
+ 23 KSP Residual norm 4.97998e-05 
 #PETSc Option Table entries:
 -mx 6
 -options_left
