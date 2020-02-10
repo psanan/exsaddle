@@ -10,23 +10,23 @@ final elbow space factor=    1.51
   0 KSP Residual norm 6.84748 
   1 KSP Residual norm 9.07812e-05 
   2 KSP Residual norm 2.94987e-07 
-KSP Object:(saddle_) 1 MPI processes
+KSP Object: (saddle_) 1 MPI processes
   type: gmres
-    GMRES: restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
-    GMRES: happy breakdown tolerance 1e-30
+    restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+    happy breakdown tolerance 1e-30
   maximum iterations=10000, initial guess is zero
   tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
   left preconditioning
   using PRECONDITIONED norm type for convergence test
-PC Object:(saddle_) 1 MPI processes
+PC Object: (saddle_) 1 MPI processes
   type: ilupack
     ILUPACK: droptol  : 0.001
     ILUPACK: droptolS : 0.0001
     ILUPACK: condest  : 100.
   linear system matrix = precond matrix:
-  Mat Object:  Asaddle   1 MPI processes
+  Mat Object: Asaddle 1 MPI processes
     type: seqaij
     rows=2312, cols=2312
     total: nonzeros=381196, allocated nonzeros=542628
-    total number of mallocs used during MatSetValues calls =0
+    total number of mallocs used during MatSetValues calls=0
       using I-node routines: found 854 nodes, limit used is 5
