@@ -2,9 +2,9 @@ static char help[] = "Solves the "
 #if defined(LAME)
 "Lame' system "
 #else
-"incompressible, variable viscosity Stokes equations " 
+"incompressible, variable viscosity Stokes equations "
 #endif
-"in " 
+"in "
 #if NSD==2
 "2d "
 #elif NSD == 3
@@ -77,7 +77,7 @@ static char help[] = "Solves the "
 "\n";
 
 /* Note: there are several older versions of this code in old_exSaddle/,
-         which include some debugging output which may be of use if 
+         which include some debugging output which may be of use if
          doing further development */
 
 #include <petscksp.h>
@@ -105,7 +105,7 @@ static PetscErrorCode ExtraSolves(KSP ksp, Vec F, Vec X);
 int main(int argc,char **args)
 {
   PetscErrorCode ierr;
-  
+
   ierr = PetscInitialize(&argc,&args,(char*)0,help);CHKERRQ(ierr);
 #if defined(EXSADDLE_WITH_PCILUPACK)
   ierr = PCRegister(PCILUPACK,     PCCreate_ILUPACK     );CHKERRQ(ierr);
@@ -173,7 +173,7 @@ PetscErrorCode SaddleSolve_Q2Q1()
     ierr = PetscOptionsInsertFileYAML(PETSC_COMM_WORLD,options_file_yaml,require);CHKERRQ(ierr);
 #else
     SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_SUP,"You must configure PETSc with YAML (e.g. --download-yaml) to use -options_file_yaml");
-#endif 
+#endif
   }
   ierr = PetscOptionsGetInt (NULL,NULL,"-mx",                          &mx,                          NULL);CHKERRQ(ierr);
   my = mx;
@@ -213,18 +213,18 @@ PetscErrorCode SaddleSolve_Q2Q1()
   if (dump_scaled_mass_matrix && !fs) SETERRQ (PETSC_COMM_WORLD,PETSC_ERR_SUP,"-dump_scaled_mass_matrix without -fs"            );
 
   /* Set up DMs and FE data for all levels */
-  {    
+  {
     PetscInt mxcoarse=mx,mycoarse=my,mzcoarse=mz;
     if (nlevels > 1) {
       const PetscInt finetocoarseratio = (PetscInt)(PetscPowReal((PetscReal)refinefactor,nlevels-1) + 1e-6);
       if (finetocoarseratio > mx || finetocoarseratio > my || finetocoarseratio > mz) SETERRQ6(PETSC_COMM_WORLD,PETSC_ERR_ARG_INCOMP,"Too much refinement %d ^ %d = %d requested for the given problem size (%d x %d x %d elements)",refinefactor,nlevels-1,finetocoarseratio,mx,my,mz);
       if ( mx % finetocoarseratio || my % finetocoarseratio || mz % finetocoarseratio) SETERRQ6(PETSC_COMM_WORLD,PETSC_ERR_ARG_INCOMP,"Coarsening ratio of %d ^ %d = %d is incompatible with problem size (%d x %d x %d elements)",refinefactor,nlevels-1,finetocoarseratio,mx,my,mz);
-      mxcoarse = mx/finetocoarseratio; 
-      mycoarse = my/finetocoarseratio; 
-      mzcoarse = mz/finetocoarseratio; 
+      mxcoarse = mx/finetocoarseratio;
+      mycoarse = my/finetocoarseratio;
+      mzcoarse = mz/finetocoarseratio;
     }
     for (k=0; k<nlevels; ++k) {
-      const PetscInt factor = (PetscInt)(PetscPowReal((PetscReal)refinefactor,k) + 1.0e-6); 
+      const PetscInt factor = (PetscInt)(PetscPowReal((PetscReal)refinefactor,k) + 1.0e-6);
       DM             dmv,dmp;
 
       ierr = FEMixedSpaceCreate(&fespace_levels[k]);CHKERRQ(ierr);
@@ -235,7 +235,7 @@ PetscErrorCode SaddleSolve_Q2Q1()
       ierr = FEMixedSpaceQuadratureCreate(fespace_levels[k],PETSC_FALSE,PETSC_TRUE);CHKERRQ(ierr);
       ierr = FEMixedSpaceBCISCreate(fespace_levels[k],dm_saddle_levels[k]);CHKERRQ(ierr);
       ierr = DMCompositeGetEntries(dm_saddle_levels[k],&dmv,&dmp);CHKERRQ(ierr);
-      ierr = FEMixedSpaceDefineQPwiseProperties(fespace_levels[k],dmv);CHKERRQ(ierr); 
+      ierr = FEMixedSpaceDefineQPwiseProperties(fespace_levels[k],dmv);CHKERRQ(ierr);
     }
   }
   fespace   = fespace_levels[nlevels-1];
@@ -251,10 +251,10 @@ PetscErrorCode SaddleSolve_Q2Q1()
     ierr = FEMixedSpaceDefineQPwiseProperties_Q1Projection(nlevels,fespace_levels,dmscalar);CHKERRQ(ierr);
   }
 
-  /* Create System 
-    
+  /* Create System
+
      We create the system, and additional rhs term due to non-zero
-     Dirichlet boundary conditions, which we then add to the 
+     Dirichlet boundary conditions, which we then add to the
      usual RHS.
    */
   {
@@ -264,7 +264,7 @@ PetscErrorCode SaddleSolve_Q2Q1()
     ierr = VecDuplicate(F,&rhs_diri);CHKERRQ(ierr);
     for (k=0; k<nlevels; ++k) {
       Vec rhs_diri_k = k==nlevels-1 ? rhs_diri : NULL ; /* NULL if k<nlevels-10 */
-      ierr = DMCreateMatrix(dm_saddle_levels[k],&A_levels[k]);CHKERRQ(ierr); 
+      ierr = DMCreateMatrix(dm_saddle_levels[k],&A_levels[k]);CHKERRQ(ierr);
       ierr = MatAssemble_Saddle_NULL(fespace_levels[k],dm_saddle_levels[k],A_levels[k]);CHKERRQ(ierr);
       ierr = MatAssemble_Saddle(fespace_levels[k],dm_saddle_levels[k],A_levels[k],rhs_diri_k);CHKERRQ(ierr);
     }
@@ -287,16 +287,16 @@ PetscErrorCode SaddleSolve_Q2Q1()
      than a solve on the top level (that is, I don't know if it propagates to coarsened or sub-matrices) */
   if (constant_pressure_nullspace) {
       PetscInt     Np;
-      Vec          Xnull,Xnullp;  
+      Vec          Xnull,Xnullp;
 
-      ierr = DMCreateGlobalVector(dm_saddle,&Xnull);CHKERRQ(ierr);  
+      ierr = DMCreateGlobalVector(dm_saddle,&Xnull);CHKERRQ(ierr);
       ierr = VecZeroEntries(Xnull);CHKERRQ(ierr);
       ierr = DMCompositeGetAccess(dm_saddle,Xnull,NULL,&Xnullp);CHKERRQ(ierr);
       ierr = VecGetSize(Xnullp,&Np);CHKERRQ(ierr);
       ierr = VecSet(Xnullp,-1.0/(PetscSqrtScalar((PetscScalar)Np)));CHKERRQ(ierr);
       ierr = DMCompositeRestoreAccess(dm_saddle,X,NULL,&Xnullp);CHKERRQ(ierr);
       ierr = MatNullSpaceCreate(PETSC_COMM_WORLD,PETSC_FALSE,1,&Xnull,&nullspace);CHKERRQ(ierr);
-      ierr = MatSetNullSpace(A,nullspace);CHKERRQ(ierr); 
+      ierr = MatSetNullSpace(A,nullspace);CHKERRQ(ierr);
       ierr = VecDestroy(&Xnull);CHKERRQ(ierr);
   }
 
@@ -340,7 +340,7 @@ PetscErrorCode SaddleSolve_Q2Q1()
     for (k=1; k<nlevels; k++) {
       KSP ksp_smooth;
       Mat P;
-      
+
       ierr = PCMGGetSmoother(pc,k,&ksp_smooth);CHKERRQ(ierr);
       ierr = KSPSetOperators(ksp_smooth,A_levels[k],A_levels[k]);CHKERRQ(ierr);
       ierr = KSPSetDM(ksp_smooth,dm_saddle_levels[k]);CHKERRQ(ierr);
@@ -351,7 +351,7 @@ PetscErrorCode SaddleSolve_Q2Q1()
     }
     {
       KSP ksp_coarse;
-      
+
       ierr = PCMGGetCoarseSolve(pc,&ksp_coarse);CHKERRQ(ierr);
       ierr = KSPSetOperators(ksp_coarse,A_levels[0],A_levels[0]);CHKERRQ(ierr);
       ierr = KSPSetDM(ksp_coarse,dm_saddle_levels[0]);CHKERRQ(ierr);
@@ -360,7 +360,7 @@ PetscErrorCode SaddleSolve_Q2Q1()
       /* GOTCHA: with PCMG many things will be set here, including insidiously that the convergence test will be skipped.
                 You may need a flag like -saddle_mg_coarse_ksp_convergence_test default to get the behavior you want */
       if (fs_coarse) {
-        DM dmv_coarse,dmp_coarse; 
+        DM dmv_coarse,dmp_coarse;
         PC pc_coarse;
         IS *is_stokes_field_coarse;
 
@@ -373,7 +373,7 @@ PetscErrorCode SaddleSolve_Q2Q1()
         ierr = PCSetType(pc_coarse,PCFIELDSPLIT);CHKERRQ(ierr);
         ierr = PCFieldSplitSetType(pc_coarse,PC_COMPOSITE_SCHUR);CHKERRQ(ierr);
         ierr = PCFieldSplitSetSchurFactType(pc_coarse,PC_FIELDSPLIT_SCHUR_FACT_UPPER);CHKERRQ(ierr);
-        ierr = PCFieldSplitSetSchurPre(pc_coarse,PC_FIELDSPLIT_SCHUR_PRE_USER,Mpscaled_coarse);CHKERRQ(ierr); 
+        ierr = PCFieldSplitSetSchurPre(pc_coarse,PC_FIELDSPLIT_SCHUR_PRE_USER,Mpscaled_coarse);CHKERRQ(ierr);
         ierr = DMCompositeGetGlobalISs(fespace_levels[0]->dm_saddle,&is_stokes_field_coarse);CHKERRQ(ierr);
         ierr = PCFieldSplitSetIS(pc_coarse,"u",is_stokes_field_coarse[0]);CHKERRQ(ierr);
         ierr = PCFieldSplitSetIS(pc_coarse,"p",is_stokes_field_coarse[1]);CHKERRQ(ierr);
@@ -400,7 +400,7 @@ PetscErrorCode SaddleSolve_Q2Q1()
       }
     }
   }
- 
+
   /* Set From Options */
   ierr = KSPSetFromOptions(ksp);CHKERRQ(ierr);
 
@@ -409,7 +409,7 @@ PetscErrorCode SaddleSolve_Q2Q1()
     KSP       *sub_ksp;
     PetscInt  nsplits;
     PetscBool same = PETSC_FALSE;
-    
+
     ierr = KSPSetUp(ksp);CHKERRQ(ierr);
     ierr = KSPGetPC(ksp,&pc);CHKERRQ(ierr);
     ierr = PetscObjectTypeCompare((PetscObject)pc,PCFIELDSPLIT,&same);CHKERRQ(ierr);

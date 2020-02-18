@@ -38,17 +38,17 @@ static PetscErrorCode SolCx_ISCreate_BCList(DM dmv,PetscBool global,IS *_is,Pets
 #if NSD == 2
   PetscMalloc(sizeof(PetscReal)*(ni+nj+ni+nj),&vals);
   PetscMemzero(vals,sizeof(PetscReal)*(ni+nj+ni+nj));
-  
+
   L = 0;
   if (si == 0) { L += nj * 1; }
   if (sj == 0) { L += ni * 1; }
-  
+
   if (si+ni == M) { L += nj * 1; }
   if (is_free_slip) {
     if (sj+nj == N) { L += ni * 1; }
   }
   PetscMalloc(sizeof(PetscInt)*L,&idx);
-  
+
   cnt = 0;
   if (si == 0) {
     i = 0; dof_to_constrain = 0;
@@ -62,7 +62,7 @@ static PetscErrorCode SolCx_ISCreate_BCList(DM dmv,PetscBool global,IS *_is,Pets
       idx[cnt] = NSD*(i + j*ni )+dof_to_constrain; ++cnt;
     }
   }
-  
+
   if (si+ni == M) {
     i = ni-1; dof_to_constrain = 0;
     for (j=0; j<nj; ++j) {
@@ -77,30 +77,30 @@ static PetscErrorCode SolCx_ISCreate_BCList(DM dmv,PetscBool global,IS *_is,Pets
       }
     }
   }
-#elif NSD == 3 
+#elif NSD == 3
   length = 2 * (ni*nj + ni*nk + nj*nk); /* 6 faces */
   PetscMalloc(sizeof(PetscReal)*length,&vals);
   PetscMemzero(vals,sizeof(PetscReal)*length);
-  
+
   L = 0;
-  if (si == 0) { L += nj * nk; } 
+  if (si == 0) { L += nj * nk; }
   if (sj == 0) { L += ni * nk; }
   if (sk == 0) { L += ni * nj; }
-  
+
   if (si+ni == M) { L += nj * nk; }
   if (is_free_slip) {
     if (sj+nj == N) { L += ni * nk; }
   }
   if (sk+nk == P) { L += ni * nj; }
   PetscMalloc(sizeof(PetscInt)*L,&idx);
-  
+
 
   cnt = 0;
   if (si == 0) {
     i = 0; dof_to_constrain = 0;
     for (j=0; j<nj; ++j) {
       for (k=0; k<nk; ++k) {
-        idx[cnt] = NSD*(i + j*ni + k*ni*nj)+dof_to_constrain; ++cnt; 
+        idx[cnt] = NSD*(i + j*ni + k*ni*nj)+dof_to_constrain; ++cnt;
       }
     }
   }
@@ -153,7 +153,7 @@ static PetscErrorCode SolCx_ISCreate_BCList(DM dmv,PetscBool global,IS *_is,Pets
   PetscFree(idx);
   *_is   = is;
   *_vals = vals;
-  
+
   PetscFunctionReturn(0);
 }
 
@@ -171,7 +171,7 @@ static PetscErrorCode FixedBase_ISCreate_BCList(DM dmv,PetscBool global,IS *_is,
   IS               is;
   PetscReal        *vals;
   static PetscBool been_here = PETSC_FALSE;
- 
+
   PetscFunctionBeginUser;
 
   if (!been_here) {
@@ -189,11 +189,11 @@ static PetscErrorCode FixedBase_ISCreate_BCList(DM dmv,PetscBool global,IS *_is,
 #if NSD == 2
   PetscMalloc(sizeof(PetscReal)*(NSD*ni),&vals);
   PetscMemzero(vals,sizeof(PetscReal)*(NSD*ni));
- 
+
   /* Constrain only the bottom face */
   L = (sj == 0) ? NSD * ni : 0;
   PetscMalloc(sizeof(PetscInt)*L,&idx);
-  
+
   cnt = 0;
   if (sj == 0) {
     for(dof_to_constrain = 0; dof_to_constrain<NSD; ++dof_to_constrain){
@@ -204,14 +204,14 @@ static PetscErrorCode FixedBase_ISCreate_BCList(DM dmv,PetscBool global,IS *_is,
     }
   }
 
-#elif NSD == 3 
+#elif NSD == 3
   PetscMalloc(sizeof(PetscReal)*(NSD*ni*nk),&vals);
   PetscMemzero(vals,sizeof(PetscReal)*(NSD*ni*nk));
- 
+
   /* Constrain only the bottom face */
   L = (sj == 0) ? NSD * ni * nk : 0;
   PetscMalloc(sizeof(PetscInt)*L,&idx);
-  
+
   cnt = 0;
   if (sj == 0) {
     j = 0;
@@ -229,7 +229,7 @@ static PetscErrorCode FixedBase_ISCreate_BCList(DM dmv,PetscBool global,IS *_is,
   PetscFree(idx);
   *_is   = is;
   *_vals = vals;
-  
+
   PetscFunctionReturn(0);
 }
 #endif
@@ -249,7 +249,7 @@ static PetscErrorCode Compression_ISCreate_BCList(DM dmv,PetscBool global,IS *_i
   PetscReal        *vals;
   static PetscBool been_here = PETSC_FALSE;
   const PetscReal  displacement = 0.1;
- 
+
   PetscFunctionBeginUser;
 
   if (!been_here) {
@@ -277,7 +277,7 @@ static PetscErrorCode Compression_ISCreate_BCList(DM dmv,PetscBool global,IS *_i
     i = 0;
     for(dof_to_constrain = 0; dof_to_constrain<NSD; ++dof_to_constrain){
       for (j=0; j<nj; ++j) {
-        idx[cnt] = NSD*(i + j*ni)+dof_to_constrain; 
+        idx[cnt] = NSD*(i + j*ni)+dof_to_constrain;
         if (dof_to_constrain == 0 ){
           vals[cnt] = displacement;
         }
@@ -289,7 +289,7 @@ static PetscErrorCode Compression_ISCreate_BCList(DM dmv,PetscBool global,IS *_i
     i = ni-1;
     for(dof_to_constrain = 0; dof_to_constrain<NSD; ++dof_to_constrain){
       for (j=0; j<nj; ++j) {
-        idx[cnt] = NSD*(i + j*ni)+dof_to_constrain; 
+        idx[cnt] = NSD*(i + j*ni)+dof_to_constrain;
         if (dof_to_constrain == 0){
           vals[cnt] = - displacement;
         }
@@ -297,13 +297,13 @@ static PetscErrorCode Compression_ISCreate_BCList(DM dmv,PetscBool global,IS *_i
       }
     }
   }
-#elif NSD == 3 
+#elif NSD == 3
   if (si == 0) {
     i = 0;
     for(dof_to_constrain = 0; dof_to_constrain<NSD; ++dof_to_constrain){
       for (j=0; j<nj; ++j) {
         for (k=0; k<nk; ++k) {
-          idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain; 
+          idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain;
           if (dof_to_constrain == 0 ){
             vals[cnt] = displacement;
           }
@@ -317,7 +317,7 @@ static PetscErrorCode Compression_ISCreate_BCList(DM dmv,PetscBool global,IS *_i
     for(dof_to_constrain = 0; dof_to_constrain<NSD; ++dof_to_constrain){
       for (j=0; j<nj; ++j) {
         for (k=0; k<nk; ++k) {
-          idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain; 
+          idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain;
           if (dof_to_constrain == 0){
             vals[cnt] = - displacement;
           }
@@ -332,7 +332,7 @@ static PetscErrorCode Compression_ISCreate_BCList(DM dmv,PetscBool global,IS *_i
   PetscFree(idx);
   *_is   = is;
   *_vals = vals;
-  
+
   PetscFunctionReturn(0);
 }
 #endif
@@ -349,7 +349,7 @@ static PetscErrorCode Compression2_ISCreate_BCList(DM dmv,PetscBool global,IS *_
   PetscReal        *vals;
   static PetscBool been_here = PETSC_FALSE;
   const PetscReal  displacement = 0.1;
- 
+
   PetscFunctionBeginUser;
 
   if (!been_here) {
@@ -383,7 +383,7 @@ static PetscErrorCode Compression2_ISCreate_BCList(DM dmv,PetscBool global,IS *_
     i = 0;
     for (j=0; j<nj; ++j) {
       for (k=0; k<nk; ++k) {
-        idx[cnt]  = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain; 
+        idx[cnt]  = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain;
         vals[cnt] = displacement;
         ++cnt;
       }
@@ -396,7 +396,7 @@ static PetscErrorCode Compression2_ISCreate_BCList(DM dmv,PetscBool global,IS *_
     i = ni-1;
     for (j=0; j<nj; ++j) {
       for (k=0; k<nk; ++k) {
-        idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain; 
+        idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain;
         vals[cnt] = - displacement;
         ++cnt;
       }
@@ -410,7 +410,7 @@ static PetscErrorCode Compression2_ISCreate_BCList(DM dmv,PetscBool global,IS *_
     j = 0;
     for (i=0; i<ni; ++i) {
       for (k=0; k<nk; ++k) {
-        idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain; 
+        idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain;
         vals[cnt] = 0.0;
         ++cnt;
       }
@@ -424,7 +424,7 @@ static PetscErrorCode Compression2_ISCreate_BCList(DM dmv,PetscBool global,IS *_
     k = 0;
     for (i=0; i<ni; ++i) {
       for (j=0; j<nj; ++j) {
-        idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain; 
+        idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain;
         vals[cnt] = 0.0;
         ++cnt;
       }
@@ -438,7 +438,7 @@ static PetscErrorCode Compression2_ISCreate_BCList(DM dmv,PetscBool global,IS *_
     k = nk-1;
     for (i=0; i<ni; ++i) {
       for (j=0; j<nj; ++j) {
-        idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain; 
+        idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain;
         vals[cnt] = 0.0;
         ++cnt;
       }
@@ -450,7 +450,7 @@ static PetscErrorCode Compression2_ISCreate_BCList(DM dmv,PetscBool global,IS *_
   PetscFree(idx);
   *_is   = is;
   *_vals = vals;
-  
+
   PetscFunctionReturn(0);
 }
 #endif
@@ -473,7 +473,7 @@ static PetscErrorCode StokesMMS1_ISCreate_BCList(DM dmv,PetscBool global,IS *_is
   Vec              coord_l;
   PetscScalar      *LA_coord_l;
   PetscReal        c[NSD];
- 
+
   PetscFunctionBeginUser;
 
   if (!been_here) {
@@ -489,7 +489,7 @@ static PetscErrorCode StokesMMS1_ISCreate_BCList(DM dmv,PetscBool global,IS *_is
   }
   ierr = DMGetCoordinatesLocal(dmv,&coord_l);CHKERRQ(ierr);
   ierr = VecGetArray(coord_l,&LA_coord_l);CHKERRQ(ierr);
- 
+
   /* Constrain all 4 faces in both velocity components*/
   L = 0;
   if (si    == 0) L += NSD * nj;
@@ -531,10 +531,10 @@ static PetscErrorCode StokesMMS1_ISCreate_BCList(DM dmv,PetscBool global,IS *_is
         c[d] = LA_coord_l[NSD*(i+j*ni)+d];
       }
       for(d = 0; d<NSD; ++d){
-        idx[cnt] = NSD*(i + j*ni)+d; 
+        idx[cnt] = NSD*(i + j*ni)+d;
         vals[cnt] = d == 0 ? MMS1_SOLX(c[0],c[1]) : MMS1_SOLY(c[0],c[1]);
         // DEBUG
-#if 0 
+#if 0
         {
           PetscMPIInt rank;
           ierr = MPI_Comm_rank(PETSC_COMM_WORLD,&rank);CHKERRQ(ierr);
@@ -553,7 +553,7 @@ static PetscErrorCode StokesMMS1_ISCreate_BCList(DM dmv,PetscBool global,IS *_is
         c[d] = LA_coord_l[NSD*(i+j*ni)+d];
       }
       for(d = 0; d<NSD; ++d){
-        idx[cnt] = NSD*(i + j*ni)+d; 
+        idx[cnt] = NSD*(i + j*ni)+d;
         vals[cnt] = d == 0 ? MMS1_SOLX(c[0],c[1]) : MMS1_SOLY(c[0],c[1]);
 
         // DEBUG
@@ -598,7 +598,7 @@ static PetscErrorCode StokesMMS1_ISCreate_BCList(DM dmv,PetscBool global,IS *_is
   PetscFree(idx);
   *_is   = is;
   *_vals = vals;
-  
+
   PetscFunctionReturn(0);
 }
 #endif
@@ -611,7 +611,7 @@ PetscErrorCode ISCreate_BCList(DM dmv,PetscBool global,IS *_is,PetscReal **_vals
 {
   PetscErrorCode ierr;
   PetscInt       model = DEFAULT_MODEL;
-  
+
   ierr = PetscOptionsGetInt(NULL,NULL,"-model",&model,NULL);CHKERRQ(ierr);
 
   switch (model) {
@@ -659,7 +659,7 @@ PetscErrorCode LameOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu
   static PetscBool been_here = PETSC_FALSE;
   PetscReal        mu_qp,lambda_qp,rho_qp;
   PetscBool        inside = PETSC_FALSE;
-  
+
   PetscFunctionBeginUser;
   if (!been_here) {
     PetscPrintf(PETSC_COMM_WORLD,"ModelType: LameOneSinker\n");
@@ -680,26 +680,26 @@ PetscErrorCode LameOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu
     ierr = PetscPrintf(PETSC_COMM_WORLD,"  params: rad %1.4e\n",opts_rad);CHKERRQ(ierr);
     been_here = PETSC_TRUE;
   }
-  
+
   mu_qp = opts_mu0;
   lambda_qp = opts_lambda0;
   rho_qp = 1.0;
-  
+
   {
 #if NSD == 2
     const PetscReal sep2 = (coor[0] - 0.5)*(coor[0] - 0.5) + (coor[1] - 0.5)*(coor[1] - 0.5);
-#elif NSD == 3 
+#elif NSD == 3
     const PetscReal sep2 = (coor[0] - 0.5)*(coor[0] - 0.5) + (coor[1] - 0.5)*(coor[1] - 0.5) + (coor[2] - 0.5)*(coor[2] - 0.5);
 #endif
     if (sep2 < opts_rad*opts_rad) inside = PETSC_TRUE;
   }
-  
+
   if (inside) {
     rho_qp = 2.0; /* 2x density inside the inclusion */
     mu_qp = opts_mu1;
     lambda_qp = opts_lambda1;
   }
-  
+
   if (lambda) {
     *lambda = lambda_qp;
   }
@@ -744,7 +744,7 @@ PetscErrorCode LameXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu,P
     opts_lambda1 = 1.0;
     opts_rad     = 0.05;
     opts_numinc  = 3;
-    
+
     ierr = PetscOptionsGetReal(NULL,NULL,"-mu0",&opts_mu0,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-mu1",&opts_mu1,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-lambda0",&opts_lambda0,0);CHKERRQ(ierr);
@@ -766,7 +766,7 @@ PetscErrorCode LameXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu,P
   if (opts_rad > 0.05) {
     SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_SUP,"Sinker Radius too big"); /* perhaps to cautious */
   }
-  
+
   mu_qp     = opts_mu0;
   lambda_qp = opts_lambda0;
   rho_qp    = 1.0;
@@ -781,14 +781,14 @@ PetscErrorCode LameXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu,P
       inside = PETSC_TRUE;
       break;
     }
-  } 
-  
+  }
+
   if (inside) {
     mu_qp     = opts_mu1;
     lambda_qp = opts_lambda1;
     rho_qp = 1.1;
   }
-  
+
   if (mu) {
     *mu = mu_qp;
   }
@@ -805,7 +805,7 @@ PetscErrorCode LameXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu,P
   if (Fp) {
     Fp[0] = 0.0;
   }
-	PetscFunctionReturn(0);
+  PetscFunctionReturn(0);
 }
 
 /********************************************************************/
@@ -815,7 +815,7 @@ PetscErrorCode LameHomogeneous_EvaluateCoefficients(PetscReal coor[],PetscReal *
   static PetscReal opts_mu0,opts_lambda0;
   static PetscBool been_here = PETSC_FALSE;
   PetscReal        mu_qp,lambda_qp,rho_qp;
-  
+
   PetscFunctionBeginUser;
   if (!been_here) {
     PetscPrintf(PETSC_COMM_WORLD,"ModelType: LameHomogeneous\n");
@@ -827,11 +827,11 @@ PetscErrorCode LameHomogeneous_EvaluateCoefficients(PetscReal coor[],PetscReal *
     ierr = PetscPrintf(PETSC_COMM_WORLD,"  params: lambda0 %1.4e\n",opts_lambda0);CHKERRQ(ierr);
     been_here = PETSC_TRUE;
   }
-  
+
   mu_qp = opts_mu0;
   lambda_qp = opts_lambda0;
   rho_qp = 1.0;
-  
+
   if (lambda) {
     *lambda = lambda_qp;
   }
@@ -856,20 +856,20 @@ PetscErrorCode Lame_EvaluateCoefficients(PetscReal coor[],PetscReal *mu,PetscRea
 {
   PetscErrorCode ierr;
   PetscInt model = DEFAULT_MODEL;
-  
+
   ierr = PetscOptionsGetInt(NULL,NULL,"-model",&model,NULL);CHKERRQ(ierr);
-  
+
   switch (model) {
     case 2:
       ierr = LameXSinker_EvaluateCoefficients(coor,mu,lambda,Fu,Fp);CHKERRQ(ierr);
       break;
     case 6:
-    case 8: 
-    case 10: 
+    case 8:
+    case 10:
     case 12:
       ierr = LameOneSinker_EvaluateCoefficients(coor,mu,lambda,Fu,Fp);CHKERRQ(ierr);
       break;
-    case 9: 
+    case 9:
       ierr = LameHomogeneous_EvaluateCoefficients(coor,mu,lambda,Fu,Fp);CHKERRQ(ierr);
       break;
     default :
@@ -893,7 +893,7 @@ PetscErrorCode StokesSolCx_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,
   static PetscBool been_here = PETSC_FALSE;
   PetscReal eta_qp;
   PetscErrorCode ierr;
-  
+
   PetscFunctionBeginUser;
   if (!been_here) {
     PetscPrintf(PETSC_COMM_WORLD,"ModelType: StokesSolCx\n");
@@ -901,7 +901,7 @@ PetscErrorCode StokesSolCx_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,
     opts_eta1 = 1.0;
     opts_xc   = 0.5;
     opts_nz   = 1;
-    
+
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta0",&opts_eta0,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta1",&opts_eta1,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-solcx_xc",&opts_xc,0);CHKERRQ(ierr);
@@ -910,10 +910,10 @@ PetscErrorCode StokesSolCx_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,
     PetscPrintf(PETSC_COMM_WORLD,"  params: eta1 %1.4e\n",opts_eta1);
     PetscPrintf(PETSC_COMM_WORLD,"  params: xc   %1.4e\n",opts_xc);
     PetscPrintf(PETSC_COMM_WORLD,"  params: nz   %D\n",opts_nz);
-    
+
     been_here = PETSC_TRUE;
   }
-  
+
   eta_qp = opts_eta0;
   if (coor[0] > opts_xc) eta_qp = opts_eta1;
   if (eta) {
@@ -940,14 +940,14 @@ PetscErrorCode StokesThreeSinker_EvaluateCoefficients(PetscReal coor[],PetscReal
   PetscReal        eta_qp,rho_qp;
   PetscBool        inside = PETSC_FALSE;
   PetscErrorCode   ierr;
-  
+
   PetscFunctionBeginUser;
   if (!been_here) {
     PetscPrintf(PETSC_COMM_WORLD,"ModelType: StokesThreeSinker\n");
     opts_eta0 = 1.0;
     opts_eta1 = 1.0;
     opts_rad = 0.1;
-    
+
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta0",&opts_eta0,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta1",&opts_eta1,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-sinker_r",&opts_rad,0);CHKERRQ(ierr);
@@ -956,7 +956,7 @@ PetscErrorCode StokesThreeSinker_EvaluateCoefficients(PetscReal coor[],PetscReal
     PetscPrintf(PETSC_COMM_WORLD,"  params: rad  %1.4e\n",opts_rad);
     been_here = PETSC_TRUE;
   }
-  
+
   eta_qp = opts_eta0;
   rho_qp = 1.0;
 
@@ -982,12 +982,12 @@ PetscErrorCode StokesThreeSinker_EvaluateCoefficients(PetscReal coor[],PetscReal
     if (sep2 < opts_rad*opts_rad) inside = PETSC_TRUE;
 #endif
   }
-  
+
   if (inside) {
     eta_qp = opts_eta1;
     rho_qp = 1.1;
   }
-  
+
   if (eta) {
     *eta = eta_qp;
   }
@@ -1026,7 +1026,7 @@ PetscErrorCode StokesXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *et
     opts_eta1   = 1.0;
     opts_rad    = 0.05;
     opts_numinc = 3;
-    
+
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta0",&opts_eta0,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta1",&opts_eta1,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-sinker_r",&opts_rad,0);CHKERRQ(ierr);
@@ -1044,7 +1044,7 @@ PetscErrorCode StokesXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *et
   if (opts_rad > 0.05) {
     SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_SUP,"Sinker Radius too big"); /* perhaps to cautious */
   }
-  
+
   eta_qp = opts_eta0;
   rho_qp = 1.0;
 
@@ -1058,13 +1058,13 @@ PetscErrorCode StokesXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *et
       inside = PETSC_TRUE;
       break;
     }
-  } 
-  
+  }
+
   if (inside) {
     eta_qp = opts_eta1;
     rho_qp = 1.1;
   }
-  
+
   if (eta) {
     *eta = eta_qp;
   }
@@ -1078,7 +1078,7 @@ PetscErrorCode StokesXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *et
   if (Fp) {
     Fp[0] = 0.0;
   }
-	PetscFunctionReturn(0);
+  PetscFunctionReturn(0);
 }
 
 /*****************************************************************************/
@@ -1087,12 +1087,12 @@ PetscErrorCode StokesOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *
   static PetscReal opts_eta0,opts_eta1,opts_rad,opts_x,opts_y;
 #if NSD==3
   static PetscReal opts_z;
-#endif 
+#endif
   static PetscBool been_here = PETSC_FALSE;
   PetscReal        eta_qp,rho_qp;
   PetscBool        inside = PETSC_FALSE;
-	PetscErrorCode   ierr;
-  
+  PetscErrorCode   ierr;
+
   PetscFunctionBeginUser;
   if (!been_here) {
     PetscPrintf(PETSC_COMM_WORLD,"ModelType: StokesOneSinker\n");
@@ -1104,7 +1104,7 @@ PetscErrorCode StokesOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *
 #if NSD==3
     opts_z    = 0.5;
 #endif
-    
+
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta0",&opts_eta0,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta1",&opts_eta1,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-sinker_r",&opts_rad,0);CHKERRQ(ierr);
@@ -1123,10 +1123,10 @@ PetscErrorCode StokesOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *
     ierr = PetscPrintf(PETSC_COMM_WORLD,"  params: rad %1.4e\n",opts_rad);CHKERRQ(ierr);
     been_here = PETSC_TRUE;
   }
-  
+
   eta_qp = opts_eta0;
   rho_qp = 1.0;
-  
+
   {
     PetscReal sep2;
 #if NSD == 2
@@ -1136,12 +1136,12 @@ PetscErrorCode StokesOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *
 #endif
     if (sep2 < opts_rad*opts_rad) inside = PETSC_TRUE;
   }
-  
+
   if (inside) {
     eta_qp = opts_eta1;
     rho_qp = 1.1;
   }
-  
+
   if (eta) {
     *eta = eta_qp;
   }
@@ -1155,7 +1155,7 @@ PetscErrorCode StokesOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *
   if (Fp) {
     Fp[0] = 0.0;
   }
-	PetscFunctionReturn(0);
+  PetscFunctionReturn(0);
 }
 
 /*****************************************************************************/
@@ -1167,10 +1167,10 @@ PetscErrorCode StokesOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *
  */
 PetscErrorCode GenerateInclusionOrigins(PetscInt ninclusions,PetscReal rmax,PetscReal Lx,PetscReal Ly,PetscReal Lz, PetscReal min_sep_wall,PetscReal min_sep_region,PetscReal **_pos)
 {
-	PetscReal   *pos;
-	PetscInt    p,found=0,overlap,attempt,loops=0;
-	PetscInt    max_attempts = 50000;
- 
+  PetscReal   *pos;
+  PetscInt    p,found=0,overlap,attempt,loops=0;
+  PetscInt    max_attempts = 50000;
+
   PetscOptionsGetInt(NULL,NULL,"-max_attempts",&max_attempts,NULL);
   PetscPrintf(PETSC_COMM_WORLD,"# GenerateInclusionOrigins:\n");
   PetscPrintf(PETSC_COMM_WORLD,"#   nregions       %D\n",ninclusions);
@@ -1178,102 +1178,102 @@ PetscErrorCode GenerateInclusionOrigins(PetscInt ninclusions,PetscReal rmax,Pets
   PetscPrintf(PETSC_COMM_WORLD,"#   Lx,Ly,Lz       %1.4e,%1.4e,%1.4e\n",Lx,Ly,Lz);
   PetscPrintf(PETSC_COMM_WORLD,"#   min_sep        %1.4e (in terms of region radii)\n",min_sep_region/rmax);
   PetscPrintf(PETSC_COMM_WORLD,"#   min_wall sep   %1.4e (in terms of region radii)\n",min_sep_wall/rmax);
-	
-	PetscMalloc1(NSD*ninclusions,&pos);
-	
+
+  PetscMalloc1(NSD*ninclusions,&pos);
+
   if (ninclusions >= max_attempts) {
     SETERRQ(PETSC_COMM_SELF,PETSC_ERR_SUP,"Error: max attempts is < ninclusions. Increase -max_attempts");
   }
-  
-	srand(0);
-	loops = 0;
-  
-START_INCLUSION:
-	/* if we didn't locate ninclusions in max_attempts, we throw ALL previous generated inclusions away and start again */
-  
-	++loops;
-	found   = 0;
-	attempt = 0;
-  
-	while (found < ninclusions) {
-		PetscReal dx,dy,dz,range[NSD],cp[NSD],xp,yp,zp;
-    
-		if (attempt == max_attempts) { goto START_INCLUSION; }
-		
-    /* generate random centoid within [0,Lx]x[0,Ly]x[0,Lz] */
-		xp = (PetscReal)( rand()/( (double)RAND_MAX ) );
-		yp = (PetscReal)( rand()/( (double)RAND_MAX ) );
-		zp = (PetscReal)( rand()/( (double)RAND_MAX ) );
-    
-		xp = xp * Lx;
-		yp = yp * Ly;
-		zp = zp * Lz;
-		
-    ++attempt;
-    
-    /* check of sphere is further from wall than min_sep_wall * radius */
-		dx = min_sep_wall*rmax;
-		range[0] = xp - dx;
-		if (range[0] < 0.0) { continue; }
-		range[0] = xp + dx;
-		if (range[0] > Lx) { continue; }
-		
-		dy = min_sep_wall*rmax;
-		range[1] = yp - dy;
-		if (range[1] < 0.0) { continue; }
-		range[1] = yp + dy;
-		if (range[1] > Ly) { continue; }
-    
-		dz = min_sep_wall*rmax;
-		range[2] = zp - dz;
-		if (range[2] < 0.0) { continue; }
-		range[2] = zp + dz;
-		if (range[2] > Lz) { continue; }
 
-		/* check if spheres overlap with each other */
-		cp[0] = xp;
-		cp[1] = yp;
-		cp[2] = zp;
-		overlap = 0;
-		for (p=0; p<found; p++) {
-			PetscReal sep;
-			
-			sep = PetscSqrtReal(  (pos[NSD*p+0]-cp[0])*(pos[NSD*p+0]-cp[0])
+  srand(0);
+  loops = 0;
+
+START_INCLUSION:
+  /* if we didn't locate ninclusions in max_attempts, we throw ALL previous generated inclusions away and start again */
+
+  ++loops;
+  found   = 0;
+  attempt = 0;
+
+  while (found < ninclusions) {
+    PetscReal dx,dy,dz,range[NSD],cp[NSD],xp,yp,zp;
+
+    if (attempt == max_attempts) { goto START_INCLUSION; }
+
+    /* generate random centoid within [0,Lx]x[0,Ly]x[0,Lz] */
+    xp = (PetscReal)( rand()/( (double)RAND_MAX ) );
+    yp = (PetscReal)( rand()/( (double)RAND_MAX ) );
+    zp = (PetscReal)( rand()/( (double)RAND_MAX ) );
+
+    xp = xp * Lx;
+    yp = yp * Ly;
+    zp = zp * Lz;
+
+    ++attempt;
+
+    /* check of sphere is further from wall than min_sep_wall * radius */
+    dx = min_sep_wall*rmax;
+    range[0] = xp - dx;
+    if (range[0] < 0.0) { continue; }
+    range[0] = xp + dx;
+    if (range[0] > Lx) { continue; }
+
+    dy = min_sep_wall*rmax;
+    range[1] = yp - dy;
+    if (range[1] < 0.0) { continue; }
+    range[1] = yp + dy;
+    if (range[1] > Ly) { continue; }
+
+    dz = min_sep_wall*rmax;
+    range[2] = zp - dz;
+    if (range[2] < 0.0) { continue; }
+    range[2] = zp + dz;
+    if (range[2] > Lz) { continue; }
+
+    /* check if spheres overlap with each other */
+    cp[0] = xp;
+    cp[1] = yp;
+    cp[2] = zp;
+    overlap = 0;
+    for (p=0; p<found; p++) {
+      PetscReal sep;
+
+      sep = PetscSqrtReal(  (pos[NSD*p+0]-cp[0])*(pos[NSD*p+0]-cp[0])
                           + (pos[NSD*p+1]-cp[1])*(pos[NSD*p+1]-cp[1])
                           + (pos[NSD*p+2]-cp[2])*(pos[NSD*p+2]-cp[2]) );
-      
+
       /* check centroids are min_sep_region * radius distance from each other */
-			if (sep < 2.0*rmax + min_sep_region*rmax) {
-				overlap = 1;
-				break;
-			}
-		}
-		if (overlap == 1) { continue; }
-		
-		pos[NSD*found+0] = xp;
-		pos[NSD*found+1] = yp;
-		pos[NSD*found+2] = zp;
-		
+      if (sep < 2.0*rmax + min_sep_region*rmax) {
+        overlap = 1;
+        break;
+      }
+    }
+    if (overlap == 1) { continue; }
+
+    pos[NSD*found+0] = xp;
+    pos[NSD*found+1] = yp;
+    pos[NSD*found+2] = zp;
+
     ++found;
-	}
-  
-	PetscPrintf(PETSC_COMM_WORLD,"# GenerateInclusionOrigins: performed %D loops: made %D attempts and correctly defined %D inclusions\n",loops,attempt,ninclusions);
-	
-	*_pos   = pos;
-	PetscFunctionReturn(0);
+  }
+
+  PetscPrintf(PETSC_COMM_WORLD,"# GenerateInclusionOrigins: performed %D loops: made %D attempts and correctly defined %D inclusions\n",loops,attempt,ninclusions);
+
+  *_pos   = pos;
+  PetscFunctionReturn(0);
 }
 
 /*****************************************************************************/
 PetscErrorCode SinkerPtatin_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,PetscReal Fu[],PetscReal Fp[])
 {
-	PetscErrorCode   ierr;
+  PetscErrorCode   ierr;
   static PetscReal opts_eta0,opts_eta1,opts_rad,*centroidpos;
   static PetscBool been_here = PETSC_FALSE;
   static PetscInt  opts_numinc;
   PetscReal        eta_qp,rho_qp;
   PetscBool        inside;
   PetscInt         k;
-  
+
   PetscFunctionBeginUser;
   if (!been_here) {
     PetscPrintf(PETSC_COMM_WORLD,"ModelType: SinkerPtatin\n");
@@ -1281,44 +1281,44 @@ PetscErrorCode SinkerPtatin_EvaluateCoefficients(PetscReal coor[],PetscReal *eta
     opts_eta1 = 1.1;
     opts_rad = 0.05;
     opts_numinc = 3;
-    
+
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta0",&opts_eta0,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta1",&opts_eta1,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-sinker_r",&opts_rad,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetInt(NULL,NULL,"-sinker_n",&opts_numinc,0);CHKERRQ(ierr);
     PetscPrintf(PETSC_COMM_WORLD,"  params: eta0 %1.4e\n",opts_eta0);
     PetscPrintf(PETSC_COMM_WORLD,"  params: eta1 %1.4e\n",opts_eta1);
-    
+
     ierr = GenerateInclusionOrigins(opts_numinc,opts_rad,1.0,1.0,1.0,1.5,1.5,&centroidpos);CHKERRQ(ierr);
-    
+
     been_here = PETSC_TRUE;
   }
-  
+
   eta_qp = opts_eta0;
   rho_qp = 1.0;
-  
+
   inside = PETSC_FALSE;
   for (k=0; k<opts_numinc; ++k) {
     PetscReal *pos_k;
     PetscReal sep2;
-    
+
     pos_k = &centroidpos[NSD*k];
-    
+
 #if NSD == 2
     sep2 = (coor[0] - pos_k[0])*(coor[0] - pos_k[0]) + (coor[1] - pos_k[1])*(coor[1] - pos_k[1]);
 #elif NSD == 3
     sep2 = (coor[0] - pos_k[0])*(coor[0] - pos_k[0]) + (coor[1] - pos_k[1])*(coor[1] - pos_k[1]) + (coor[2] - pos_k[2])*(coor[2] - pos_k[2]);
 #endif
     if (sep2 < opts_rad*opts_rad) inside = PETSC_TRUE;
-    
+
     if (inside) break;
   }
-  
+
   if (inside) {
     eta_qp = opts_eta1;
     rho_qp = 1.1;
   }
-  
+
   if (eta) {
     *eta = eta_qp;
   }
@@ -1332,7 +1332,7 @@ PetscErrorCode SinkerPtatin_EvaluateCoefficients(PetscReal coor[],PetscReal *eta
   if (Fp) {
     Fp[0] = 0.0;
   }
-	PetscFunctionReturn(0);
+  PetscFunctionReturn(0);
 }
 #endif
 
@@ -1340,11 +1340,11 @@ PetscErrorCode SinkerPtatin_EvaluateCoefficients(PetscReal coor[],PetscReal *eta
 PetscErrorCode StokesSolCx3d_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,PetscReal Fu[],PetscReal Fp[])
 {
   static PetscReal opts_eta0,opts_eta1,opts_xc;
-  static PetscInt  opts_nz,opts_nz2; 
+  static PetscInt  opts_nz,opts_nz2;
   static PetscBool been_here = PETSC_FALSE;
   PetscReal        eta_qp;
-	PetscErrorCode   ierr;
-  
+  PetscErrorCode   ierr;
+
   PetscFunctionBeginUser;
   if (!been_here) {
     PetscPrintf(PETSC_COMM_WORLD,"ModelType: StokesSolCx3d\n");
@@ -1353,7 +1353,7 @@ PetscErrorCode StokesSolCx3d_EvaluateCoefficients(PetscReal coor[],PetscReal *et
     opts_xc   = 0.5;
     opts_nz   = 1;
     opts_nz2  = 1;
-    
+
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta0",&opts_eta0,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta1",&opts_eta1,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-solcx_xc",&opts_xc,0);CHKERRQ(ierr);
@@ -1363,10 +1363,10 @@ PetscErrorCode StokesSolCx3d_EvaluateCoefficients(PetscReal coor[],PetscReal *et
     PetscPrintf(PETSC_COMM_WORLD,"  params: xc   %1.4e\n",opts_xc);
     PetscPrintf(PETSC_COMM_WORLD,"  params: nz   %D\n",opts_nz);
     PetscPrintf(PETSC_COMM_WORLD,"  params: nz2  %D\n",opts_nz2);
-    
+
     been_here = PETSC_TRUE;
   }
-  
+
   eta_qp = opts_eta0;
   if (coor[0] > opts_xc) eta_qp = opts_eta1;
   if (eta) {
@@ -1380,7 +1380,7 @@ PetscErrorCode StokesSolCx3d_EvaluateCoefficients(PetscReal coor[],PetscReal *et
   if (Fp) {
     Fp[0] = 0.0;
   }
-	PetscFunctionReturn(0);
+  PetscFunctionReturn(0);
 }
 
 #if NSD==2
@@ -1388,7 +1388,7 @@ PetscErrorCode StokesSolCx3d_EvaluateCoefficients(PetscReal coor[],PetscReal *et
 static PetscErrorCode StokesMMS1_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,PetscReal Fu[],PetscReal Fp[])
 {
   static PetscBool been_here = PETSC_FALSE;
-  
+
   PetscFunctionBeginUser;
   if (!been_here) {
     PetscPrintf(PETSC_COMM_WORLD,"ModelType: StokesMMS1\n");
@@ -1396,14 +1396,14 @@ static PetscErrorCode StokesMMS1_EvaluateCoefficients(PetscReal coor[],PetscReal
   }
 
   /* This is a solution, taken from Elman/Silvester/Wathen,
-     of converging 2D flow with stream function 
+     of converging 2D flow with stream function
      phi(x,y) = 5xy^4 - x^5
-     
+
      u^x(x,y) = 20xy^3
      u^y(x,y) = 5 (x^4 - y^4)
        p(x,y) = 60 x^2y - 20 y^3 + constant
-     
-     It satisfies 
+
+     It satisfies
 
        \nabla^2 u + \grad p = 0,
                     \div  p = 0
@@ -1412,12 +1412,12 @@ static PetscErrorCode StokesMMS1_EvaluateCoefficients(PetscReal coor[],PetscReal
      is identically zero. Note that the Dirichlet boundary
      conditions are not zero. See the corresponding function
      which defines those.
-     
-     Note that this problem has a constant-pressure nullspace. 
+
+     Note that this problem has a constant-pressure nullspace.
      When a representative needs to be chosen, we will opt for the
      one which has zero mean of the discretized values (project
      out the component in the constant-pressure direction). In general
-     this doesn't correspond to any mesh-independent choice of the 
+     this doesn't correspond to any mesh-independent choice of the
      constant above.
      */
 
@@ -1431,7 +1431,7 @@ static PetscErrorCode StokesMMS1_EvaluateCoefficients(PetscReal coor[],PetscReal
   if (Fp) {
     Fp[0] = 0.0;
   }
-	PetscFunctionReturn(0);
+  PetscFunctionReturn(0);
 }
 #endif
 
@@ -1445,7 +1445,7 @@ static PetscErrorCode StokesPseudoIce_EvaluateCoefficients(PetscReal coor[],Pets
   static PetscReal opts_eta0,opts_eta1;
   static PetscBool been_here = PETSC_FALSE;
   PetscReal        size_x;
-	PetscErrorCode   ierr;
+  PetscErrorCode   ierr;
 
   PetscFunctionBeginUser;
   if (!been_here) {
@@ -1463,29 +1463,29 @@ static PetscErrorCode StokesPseudoIce_EvaluateCoefficients(PetscReal coor[],Pets
 
   size_x = 1.0;
   ierr = PetscOptionsGetReal(NULL,NULL,"-size_x",&size_x,NULL);CHKERRQ(ierr);/* This is a hack */
-  if (eta) { 
+  if (eta) {
     PetscReal xrel = coor[0]/size_x;
     *eta = xrel*opts_eta0 + (1-xrel)*opts_eta1; /* simple linear interp. This doesn't actually hit the boundary values */
   }
   if (Fu) {
     Fu[0] = 0.0;
-    Fu[1] = 0.0; 
+    Fu[1] = 0.0;
     Fu[2] = 1.0; /* Uniform forcing in z direction */
   }
   if (Fp) {
     Fp[0] = 0.0;
   }
-	PetscFunctionReturn(0);
+  PetscFunctionReturn(0);
 }
 #endif
 /*****************************************************************************/
 PetscErrorCode Stokes_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,PetscReal Fu[],PetscReal Fp[])
 {
-	PetscErrorCode ierr;
+  PetscErrorCode ierr;
   PetscInt model = DEFAULT_MODEL;
-  
+
   PetscOptionsGetInt(NULL,NULL,"-model",&model,NULL);
-  
+
   switch (model) {
     case 0:
       ierr = StokesSolCx_EvaluateCoefficients(coor,eta,Fu,Fp);CHKERRQ(ierr);
@@ -1555,7 +1555,7 @@ PetscErrorCode StokesMMS1_ComputeReferenceSolution(DM dm_saddle,Vec *Xref)
     PetscInt         si,sj,sk,ni,nj,nk,M,N,P;
     const PetscReal  *LA_coord_l;
     PetscScalar      ***arr;
-    Vec              coord_l; 
+    Vec              coord_l;
 
     ierr = DMGetCoordinatesLocal(dmv,&coord_l);CHKERRQ(ierr);
     ierr = DMDAGetInfo(dmv,0,&M,&N,&P,0,0,0,0,0,0,0,0,0);CHKERRQ(ierr);
@@ -1589,7 +1589,7 @@ PetscErrorCode StokesMMS1_ComputeReferenceSolution(DM dm_saddle,Vec *Xref)
   {
     PetscInt         si,sj,sk,ni,nj,nk,M,N,P;
     const PetscReal  *LA_coord_l;
-    Vec              coord_l; 
+    Vec              coord_l;
     PetscScalar      **arr;
 
     ierr = DMGetCoordinatesLocal(dmp,&coord_l);CHKERRQ(ierr);
@@ -1630,11 +1630,11 @@ PetscErrorCode StokesMMS1_ComputeReferenceSolution(DM dm_saddle,Vec *Xref)
 PetscErrorCode ComputeReferenceSolution(DM dm_saddle,Vec *Xref)
 {
   PetscFunctionBeginUser;
-	PetscErrorCode ierr;
+  PetscErrorCode ierr;
   PetscInt       model = DEFAULT_MODEL;
-  
+
   ierr = PetscOptionsGetInt(NULL,NULL,"-model",&model,NULL);CHKERRQ(ierr);
-  
+
   switch (model) {
 #ifndef LAME
 #if NSD==2
@@ -1643,7 +1643,7 @@ PetscErrorCode ComputeReferenceSolution(DM dm_saddle,Vec *Xref)
       break;
 #endif
 #endif
-    default:    
+    default:
       *Xref = NULL;
   }
   PetscFunctionReturn(0);
