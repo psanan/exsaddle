@@ -1,5 +1,5 @@
 static char help[] = "Solves the "
-#ifdef LAME
+#if defined(LAME)
 "Lame' system "
 #else
 "incompressible, variable viscosity Stokes equations " 
@@ -28,7 +28,7 @@ static char help[] = "Solves the "
 #if NSD == 3
 "-model 7 : lots of sinkers, controlled by -sinker_n \n"
 #endif
-#ifdef LAME
+#if defined(LAME)
 "-model 8 : one inclusion, fixed base, free elsewhere \n"
 "-model 9 : no inclusions, compression \n"
 "-model 10: single inclusion, compression \n"
@@ -39,7 +39,7 @@ static char help[] = "Solves the "
 #if defined(LAME) && NSD == 3
 "-model 12: single inclusion, compression with free slip on all faces except top\n"
 #endif
-#ifdef LAME
+#if defined(LAME)
 "-mu0 : Lame''s second parameter (shear modulus) of background \n"
 "-mu1 : Lame''s second parameter (shear modulus) of inclusion\n"
 "-lambda0 : Lame''s first parameter of background\n"
@@ -86,10 +86,10 @@ static char help[] = "Solves the "
 #include <petscdmcomposite.h>
 #include <petsc/private/dmimpl.h> /* To override ops->createdomaindecomposition */
 
-#ifdef EXSADDLE_WITH_PCILUPACK
+#if defined(EXSADDLE_WITH_PCILUPACK)
 #include "pcilupack.h"
 #endif
-#ifdef EXSADDLE_WITH_PCILDL
+#if defined(EXSADDLE_WITH_PCILDL)
 #include "pcildl.h"
 #endif
 
@@ -107,10 +107,10 @@ int main(int argc,char **args)
   PetscErrorCode ierr;
   
   ierr = PetscInitialize(&argc,&args,(char*)0,help);CHKERRQ(ierr);
-#ifdef EXSADDLE_WITH_PCILUPACK
+#if defined(EXSADDLE_WITH_PCILUPACK)
   ierr = PCRegister(PCILUPACK,     PCCreate_ILUPACK     );CHKERRQ(ierr);
 #endif
-#ifdef EXSADDLE_WITH_PCILDL
+#if defined(EXSADDLE_WITH_PCILDL)
   ierr = PCRegister(PCILDL,        PCCreate_ILDL        );CHKERRQ(ierr);
 #endif
   ierr = SaddleSolve_Q2Q1();CHKERRQ(ierr);
@@ -168,7 +168,7 @@ PetscErrorCode SaddleSolve_Q2Q1()
   /* For convenience, this code accepts a .yml file with options */
   ierr = PetscOptionsGetString(NULL,NULL,"-options_file_yaml",options_file_yaml,PETSC_MAX_PATH_LEN-1, &flg);CHKERRQ(ierr);
   if (flg) {
-#ifdef PETSC_HAVE_YAML
+#if defined(PETSC_HAVE_YAML)
     const PetscBool require = PETSC_TRUE;
     ierr = PetscOptionsInsertFileYAML(PETSC_COMM_WORLD,options_file_yaml,require);CHKERRQ(ierr);
 #else

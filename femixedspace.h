@@ -5,7 +5,7 @@
 
 #include "exSaddle.h"
 
-#ifdef LAME
+#if defined(LAME)
 typedef struct {
   PetscScalar mu,lambda;
   PetscScalar Fu[NSD];
@@ -40,7 +40,7 @@ struct _p_FEMixedSpace {
   PetscInt          lmx,lmy,lmz;
 #endif
   VQuadraturePoint  *vol_quadrature;
-#ifdef LAME
+#if defined(LAME)
   LameCoefficient   *coeff_cell; /* indexed as qp_wise_coeff[eidx*n_qpoints + qidx] */
   LameCoefficient   *coeff_qp;   /* indexed as cell_wise_coeff[eidx] */
 #else

@@ -885,7 +885,7 @@ PetscErrorCode _DMCreate_SaddleQ1_BuildElementNodeMap(DM dm,PetscInt s_el[],Pets
       u_e_map[4*eidx + 1] = (s0[0]+1) + (s0[1]+0)*m_l[0];
       u_e_map[4*eidx + 2] = (s0[0]+0) + (s0[1]+1)*m_l[0];
       u_e_map[4*eidx + 3] = (s0[0]+1) + (s0[1]+1)*m_l[0];
-#ifdef DEBUGGING_OUTPUT
+#if defined(DEBUGGING_OUTPUT)
       {
         PetscMPIInt rank;
         ierr = MPI_Comm_rank(PETSC_COMM_WORLD,&rank);CHKERRQ(ierr);
@@ -1122,7 +1122,7 @@ static PetscErrorCode _DMCreate_SaddleQ2_BuildElementLayout(DM dm,PetscInt s_el[
     if ((e_el[d] - s_el[d])%2 != 0) {
       SETERRQ1(PETSC_COMM_SELF,PETSC_ERR_USER,"[end dim %d]: Cannot generate consistent macro element: non-divisible by 2",d);
     }
-#ifdef DEBUGGING_OUTPUT 
+#if defined(DEBUGGING_OUTPUT) 
     PetscSynchronizedPrintf(comm,"Q2 [%D] dim %d [start-end] %D - %D lrange [%D - %D] : nmacro_el %D\n",rank,d,
                           s_el[d],e_el[d], s_l[d],s_l[d]+m_l[d]-1,(e_el[d] - s_el[d])/2);
     PetscSynchronizedFlush(comm,PETSC_STDOUT);
@@ -1408,7 +1408,7 @@ PetscErrorCode FEMixedSpaceQuadratureCreate(FEMixedSpace space,PetscBool alloc_c
   }
   
   if (alloc_cell_coeff) {
-#ifdef LAME
+#if defined(LAME)
     PetscMalloc(sizeof(LameCoefficient)*space->n_u_elements,&space->coeff_cell);
     PetscMemzero(space->coeff_cell,sizeof(LameCoefficient)*space->n_u_elements);
 #else
@@ -1421,7 +1421,7 @@ PetscErrorCode FEMixedSpaceQuadratureCreate(FEMixedSpace space,PetscBool alloc_c
   
   if (alloc_qp_coeff) {
     nqp = space->vol_quadrature->n_qpoints;
-#ifdef LAME
+#if defined(LAME)
     PetscMalloc(sizeof(LameCoefficient)*nqp*space->n_u_elements,&space->coeff_qp);
     PetscMemzero(space->coeff_qp,sizeof(LameCoefficient)*nqp*space->n_u_elements);
 #else
@@ -1862,7 +1862,7 @@ PetscErrorCode FEMixedSpaceDefineQPwiseProperties(FEMixedSpace space,DM dmv)
   PetscReal      el_coor[NSD*U_BASIS];
   PetscInt       e,i,d;
   PetscScalar    Fu[U_DOFS],Fp;
-#ifdef LAME
+#if defined(LAME)
   PetscScalar    mu_qp,lambda_qp;
 #else
   PetscScalar    eta_qp;
@@ -1904,7 +1904,7 @@ PetscErrorCode FEMixedSpaceDefineQPwiseProperties(FEMixedSpace space,DM dmv)
       
       for (i=0; i<U_BASIS; ++i) {
         for (d=0; d<NSD; ++d) xqp[d] += Ni[q][i] * el_coor[NSD*i+d];
-#ifdef DEBUGGING_OUTPUT
+#if defined(DEBUGGING_OUTPUT)
   {
     PetscMPIInt rank;
     MPI_Comm_rank(PETSC_COMM_WORLD,&rank);
@@ -1914,7 +1914,7 @@ PetscErrorCode FEMixedSpaceDefineQPwiseProperties(FEMixedSpace space,DM dmv)
 #endif
       }
 
-#ifdef LAME 
+#if defined(LAME) 
       ierr = Lame_EvaluateCoefficients  (xqp,&mu_qp,&lambda_qp,Fu,&Fp);CHKERRQ(ierr);
       space->coeff_qp[nqp*e+q].mu     = mu_qp;
       space->coeff_qp[nqp*e+q].lambda = lambda_qp;
@@ -1938,7 +1938,7 @@ PetscErrorCode FEMixedSpaceDefineQPwiseProperties_Q1Projection(PetscInt nlevels,
 {
   PetscErrorCode ierr;
   PetscInt       e,i,j,k,d;
-#ifdef LAME
+#if defined(LAME)
   PetscScalar    mu_qp,lambda_qp;
 #else
   PetscScalar    eta_qp;
@@ -1983,7 +1983,7 @@ PetscErrorCode FEMixedSpaceDefineQPwiseProperties_Q1Projection(PetscInt nlevels,
 
     for (q=0; q<nqp; ++q) {
       for (i=0; i<Q1_BASIS; ++i) {
-#ifdef LAME
+#if defined(LAME)
         el_coeffs[0][i] += Ni[q][i] * space->coeff_qp[nqp*e+q].mu;
         el_coeffs[4][i] += Ni[q][i] * space->coeff_qp[nqp*e+q].lambda;
 #if NSD == 3
@@ -2046,7 +2046,7 @@ PetscErrorCode FEMixedSpaceDefineQPwiseProperties_Q1Projection(PetscInt nlevels,
     }
     
     for (q=0; q<nqp; ++q) {
-#ifdef LAME
+#if defined(LAME)
       mu_qp = 0.0;
       lambda_qp = 0.0;
 #else
@@ -2055,7 +2055,7 @@ PetscErrorCode FEMixedSpaceDefineQPwiseProperties_Q1Projection(PetscInt nlevels,
       for (d=0; d<U_DOFS; ++d) Fu_qp[d] = 0.0;
       Fp_qp = 0.0;
       for (i=0; i<Q1_BASIS; ++i) {
-#ifdef LAME
+#if defined(LAME)
         mu_qp      += Ni[q][i] * el_coeffs[0][i];
         lambda_qp  += Ni[q][i] * el_coeffs[4][i];
 #if NSD == 3
@@ -2071,7 +2071,7 @@ PetscErrorCode FEMixedSpaceDefineQPwiseProperties_Q1Projection(PetscInt nlevels,
         Fu_qp[1] += Ni[q][i] * el_coeffs[2][i];
         Fp_qp    += Ni[q][i] * el_coeffs[3][i];
       }
-#ifdef LAME
+#if defined(LAME)
       space->coeff_qp[nqp*e+q].mu     = mu_qp;
       space->coeff_qp[nqp*e+q].lambda = lambda_qp;
 #else
@@ -2096,7 +2096,7 @@ PetscErrorCode FEMixedSpaceDefineQPwiseProperties_Q1Projection(PetscInt nlevels,
 
     PetscSNPrintf(name,PETSC_MAX_PATH_LEN-1,"coeff_Lv%D.vts",nlevels-1);
     ierr = PetscViewerVTKOpen(PETSC_COMM_WORLD,name,FILE_MODE_WRITE,&viewer);CHKERRQ(ierr);
-#ifdef LAME
+#if defined(LAME)
     ierr = PetscObjectSetName((PetscObject)coeffs[0],"mu");CHKERRQ(ierr);
     ierr = VecView(coeffs[0],viewer);CHKERRQ(ierr);
     ierr = PetscObjectSetName((PetscObject)coeffs[4],"lambda");CHKERRQ(ierr);
@@ -2178,7 +2178,7 @@ PetscErrorCode FEMixedSpaceDefineQPwiseProperties_Q1Projection(PetscInt nlevels,
       }
       
       for (q=0; q<nqp; ++q) {
-#ifdef LAME
+#if defined(LAME)
         mu_qp = 0.0;
         lambda_qp = 0.0;
 #else
@@ -2187,7 +2187,7 @@ PetscErrorCode FEMixedSpaceDefineQPwiseProperties_Q1Projection(PetscInt nlevels,
         for (d=0; d<U_DOFS; ++d) Fu_qp[d] = 0.0;
         Fp_qp = 0.0;
         for (i=0; i<Q1_BASIS; ++i) {
-#ifdef LAME
+#if defined(LAME)
           mu_qp     += Ni[q][i] * el_coeffs[0][i];
           lambda_qp += Ni[q][i] * el_coeffs[4][i];
 #if NSD == 3
@@ -2203,7 +2203,7 @@ PetscErrorCode FEMixedSpaceDefineQPwiseProperties_Q1Projection(PetscInt nlevels,
           Fu_qp[1] += Ni[q][i] * el_coeffs[2][i];
           Fp_qp    += Ni[q][i] * el_coeffs[3][i];
         }
-#ifdef LAME
+#if defined(LAME)
         _space[k]->coeff_qp[nqp*e+q].mu     = mu_qp;
         _space[k]->coeff_qp[nqp*e+q].lambda = lambda_qp;
 #else
@@ -2227,7 +2227,7 @@ PetscErrorCode FEMixedSpaceDefineQPwiseProperties_Q1Projection(PetscInt nlevels,
 
       PetscSNPrintf(name,PETSC_MAX_PATH_LEN-1,"coeff_Lv%D.vts",k);
       ierr = PetscViewerVTKOpen(PETSC_COMM_WORLD,name,FILE_MODE_WRITE,&viewer);CHKERRQ(ierr);
-#ifdef LAME
+#if defined(LAME)
       ierr = PetscObjectSetName((PetscObject)coeffs_c[0],"mu");CHKERRQ(ierr);
       ierr = VecView(coeffs_c[0],viewer);CHKERRQ(ierr);
       ierr = PetscObjectSetName((PetscObject)coeffs_c[4],"lambda");CHKERRQ(ierr);
@@ -2379,7 +2379,7 @@ PetscErrorCode MatAssemble_Saddle(FEMixedSpace space,DM dm_saddle,Mat A,Vec rhs_
   PetscInt               el_p_idx[P_DOFS*P_BASIS];
   PetscInt               q,nqp;
   PetscReal              *w_qp,*xi_qp;
-#ifdef LAME
+#if defined(LAME)
   PetscScalar            mu_c;
 #else
   PetscScalar            eta_c;
@@ -2391,7 +2391,7 @@ PetscErrorCode MatAssemble_Saddle(FEMixedSpace space,DM dm_saddle,Mat A,Vec rhs_
 #if NSD == 3
   PetscReal              GNuzeta[MAX_QUADP][U_BASIS],GNuz[U_BASIS];
 #endif
-#ifdef LAME
+#if defined(LAME)
   Vec                    coor_p_l;
   PetscScalar            *LA_coor_p;
   PetscReal              el_coor_p[NSD*P_BASIS];
@@ -2403,7 +2403,7 @@ PetscErrorCode MatAssemble_Saddle(FEMixedSpace space,DM dm_saddle,Mat A,Vec rhs_
   PetscScalar            el_A11[U_DOFS*U_DOFS*U_BASIS*U_BASIS];
   PetscScalar            el_A12[U_DOFS*P_DOFS*U_BASIS*P_BASIS];
   PetscScalar            el_A21[P_DOFS*U_DOFS*P_BASIS*U_BASIS];
-#ifdef LAME
+#if defined(LAME)
   PetscScalar            el_A22[P_DOFS*P_DOFS*P_BASIS*P_BASIS];
 #endif
   const PetscInt         *g_idx_u;
@@ -2427,7 +2427,7 @@ PetscErrorCode MatAssemble_Saddle(FEMixedSpace space,DM dm_saddle,Mat A,Vec rhs_
     ierr = EvaluateBasisDerivLocal_Q2(&xi_qp[NSD*q],GNuxi[q],GNueta[q],GNuzeta[q]);CHKERRQ(ierr);
 #endif
     ierr = EvaluateBasis_Q1(&xi_qp[NSD*q],Np[q]);CHKERRQ(ierr);
-#ifdef LAME
+#if defined(LAME)
 #if NSD == 2
     ierr = EvaluateBasisDerivLocal_Q1(&xi_qp[NSD*q],GNpxi[q],GNpeta[q],0         );CHKERRQ(ierr);
 #elif NSD == 3
@@ -2444,7 +2444,7 @@ PetscErrorCode MatAssemble_Saddle(FEMixedSpace space,DM dm_saddle,Mat A,Vec rhs_
   ierr = DMGetCoordinatesLocal(dmv,&coor_u_l);CHKERRQ(ierr);
   ierr = VecGetArray(coor_u_l,&LA_coor_u);CHKERRQ(ierr);
 
-#ifdef LAME
+#if defined(LAME)
   ierr = DMGetCoordinatesLocal(dmp,&coor_p_l);CHKERRQ(ierr);
   ierr = VecGetArray(coor_p_l,&LA_coor_p);CHKERRQ(ierr);
 #endif
@@ -2470,7 +2470,7 @@ PetscErrorCode MatAssemble_Saddle(FEMixedSpace space,DM dm_saddle,Mat A,Vec rhs_
       PetscInt lnidx = e_u_idx[i];
       for (d=0; d<NSD; ++d) el_coor_u[NSD*i+d] = LA_coor_u[NSD*lnidx+d];
     }
-#ifdef LAME
+#if defined(LAME)
     for (i=0; i<P_BASIS; ++i) {
       PetscInt lnidx = e_p_idx[i];
       for (d=0; d<NSD; ++d) el_coor_p[NSD*i+d] = LA_coor_p[NSD*lnidx+d];
@@ -2480,7 +2480,7 @@ PetscErrorCode MatAssemble_Saddle(FEMixedSpace space,DM dm_saddle,Mat A,Vec rhs_
     PetscMemzero(el_A11,sizeof(PetscScalar)*U_DOFS*U_DOFS*U_BASIS*U_BASIS);
     PetscMemzero(el_A12,sizeof(PetscScalar)*U_DOFS*P_DOFS*U_BASIS*P_BASIS);
     PetscMemzero(el_A21,sizeof(PetscScalar)*P_DOFS*U_DOFS*P_BASIS*U_BASIS);
-#ifdef LAME
+#if defined(LAME)
     PetscMemzero(el_A22,sizeof(PetscScalar)*P_DOFS*P_DOFS*P_BASIS*P_BASIS);
 #endif
 
@@ -2518,7 +2518,7 @@ PetscErrorCode MatAssemble_Saddle(FEMixedSpace space,DM dm_saddle,Mat A,Vec rhs_
       }
 #endif
      
-#ifdef LAME
+#if defined(LAME)
       mu_c  = space->coeff_qp[nqp*e+q].mu;
       fac = mu_c  * w_qp[q] * detJ;
 #else
@@ -2589,7 +2589,7 @@ PetscErrorCode MatAssemble_Saddle(FEMixedSpace space,DM dm_saddle,Mat A,Vec rhs_
       }
     }
   }
-#ifdef LAME
+#if defined(LAME)
     /* Assemble A22 */
     for (q=0; q<nqp; ++q) {
       PetscReal fac,detJ,lambda_c;
@@ -2615,7 +2615,7 @@ PetscErrorCode MatAssemble_Saddle(FEMixedSpace space,DM dm_saddle,Mat A,Vec rhs_
     ierr = MatSetValues(A, U_DOFS*U_BASIS,el_u_idx_g, U_DOFS*U_BASIS,el_u_idx_g, el_A11,ADD_VALUES);CHKERRQ(ierr);
     ierr = MatSetValues(A, U_DOFS*U_BASIS,el_u_idx_g, P_DOFS*P_BASIS,el_p_idx_g, el_A12,ADD_VALUES);CHKERRQ(ierr);
     ierr = MatSetValues(A, P_DOFS*P_BASIS,el_p_idx_g, U_DOFS*U_BASIS,el_u_idx_g, el_A21,ADD_VALUES);CHKERRQ(ierr);
-#ifdef LAME
+#if defined(LAME)
     ierr = MatSetValues(A, P_DOFS*P_BASIS,el_p_idx_g, P_DOFS*P_BASIS,el_p_idx_g, el_A22,ADD_VALUES);CHKERRQ(ierr);
 #endif
   }
@@ -2911,7 +2911,7 @@ PetscErrorCode MatAssemble_Schur(FEMixedSpace space,DM dmp,Mat S)
     for (q=0; q<nqp; ++q) {
       PetscReal   detJ;
       PetscScalar fac;
-#ifdef LAME
+#if defined(LAME)
       PetscScalar coeff_inv = 1.0/space->coeff_qp[nqp*e+q].lambda + 1.0/space->coeff_qp[nqp*e+q].mu;
 #else
       PetscScalar coeff_inv = 1.0/space->coeff_qp[nqp*e+q].eta;

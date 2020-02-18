@@ -6,14 +6,14 @@
 
 #include "petscdm.h"
 
-#ifdef LAME
+#if defined(LAME)
 #define DEFAULT_MODEL 6
 #else
 #define DEFAULT_MODEL 2
 #endif
 
 PetscErrorCode ISCreate_BCList(DM dm,PetscBool global,IS *_is,PetscReal **_vals);
-#ifdef LAME
+#if defined(LAME)
 PetscErrorCode Lame_EvaluateCoefficients(PetscReal coor[],PetscReal *mu,PetscReal *lambda,PetscReal Fu[],PetscReal Fp[]);
 #else
 PetscErrorCode Stokes_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,PetscReal Fu[],PetscReal Fp[]);

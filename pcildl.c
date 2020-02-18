@@ -53,7 +53,7 @@ static PetscErrorCode ILDLSetUp(PC_ILDL *ildl,PetscInt nA,PetscScalar val[],Pets
   size_t        mem;
   DILUPACKparam options;
   Dmat          B;
-#ifdef PCILDL_MORE_INFO
+#if defined(PCILDL_MORE_INFO)
   double wtime;
   PetscMPIInt rank;
 #endif
@@ -67,7 +67,7 @@ static PetscErrorCode ILDLSetUp(PC_ILDL *ildl,PetscInt nA,PetscScalar val[],Pets
   
   nB = (integer)nA;
 
-#ifdef PCILDL_MORE_INFO
+#if defined(PCILDL_MORE_INFO)
   wtime = MPI_Wtime(); 
   MPI_Comm_rank(PETSC_COMM_WORLD,&rank);
 #endif
@@ -128,7 +128,7 @@ static PetscErrorCode ILDLSetUp(PC_ILDL *ildl,PetscInt nA,PetscScalar val[],Pets
   B.ja = ja;
   B.a = a;
 
-#ifdef PCILDL_MORE_INFO
+#if defined(PCILDL_MORE_INFO)
   wtime = MPI_Wtime() - wtime;
   ierr = PetscPrintf(PETSC_COMM_SELF,"[%D] PCILDL setup phase 1 : %g s\n",rank,wtime);
   wtime = MPI_Wtime();
@@ -198,7 +198,7 @@ static PetscErrorCode ILDLSetUp(PC_ILDL *ildl,PetscInt nA,PetscScalar val[],Pets
   FREE(options.dbuff);
   FREE(options.ibuff);
   
-#ifdef PCILDL_MORE_INFO
+#if defined(PCILDL_MORE_INFO)
   wtime = MPI_Wtime() - wtime;
   ierr = PetscPrintf(PETSC_COMM_SELF,"[%D] PCILDL setup phase 2 : %g s\n",rank,wtime);
   wtime = MPI_Wtime();
@@ -257,13 +257,13 @@ static PetscErrorCode ILDLSetUp(PC_ILDL *ildl,PetscInt nA,PetscScalar val[],Pets
   free(ibuff);
   free(dbuff);
 
-#ifdef PCILDL_MORE_INFO
+#if defined(PCILDL_MORE_INFO)
   wtime = MPI_Wtime() - wtime;
   ierr = PetscPrintf(PETSC_COMM_SELF,"[%D] PCILDL setup phase 3 : %g s\n",rank,wtime);
   wtime = MPI_Wtime();
 #endif
 
-#ifdef PCILDL_PRINT_FILL
+#if defined(PCILDL_PRINT_FILL)
   ierr = PetscPrintf(PETSC_COMM_SELF,"relative fill ILDL/A: %8.1le (wrt %D nz)\n",((double)jlu[nB])/B.ia[nB],B.ia[nB]);
 #endif
   // ---------------------- END incomplete LDL^T ---------------------

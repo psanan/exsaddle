@@ -44,10 +44,10 @@ static char help[] = "Solves a tridiagonal linear system.\n\n";
 
 #include <petscksp.h>
 
-#ifdef EXSADDLE_WITH_PCILUPACK
+#if defined(EXSADDLE_WITH_PCILUPACK)
 #include "pcilupack.h"
 #endif
-#ifdef EXSADDLE_WITH_PCILDL
+#if defined(EXSADDLE_WITH_PCILDL)
 #include "pcildl.h"
 #endif
 
@@ -66,10 +66,10 @@ int main(int argc,char **args)
 
   PetscInitialize(&argc,&args,(char*)0,help);
 
-#ifdef EXSADDLE_WITH_PCILUPACK
+#if defined(EXSADDLE_WITH_PCILUPACK)
   ierr = PCRegister(PCILUPACK,     PCCreate_ILUPACK     );CHKERRQ(ierr);
 #endif
-#ifdef EXSADDLE_WITH_PCILDL
+#if defined(EXSADDLE_WITH_PCILDL)
   ierr = PCRegister(PCILDL,        PCCreate_ILDL        );CHKERRQ(ierr);
 #endif
 

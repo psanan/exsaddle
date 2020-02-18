@@ -40,10 +40,10 @@ Along the face kmax (zmax), we assume a free-surface boundary, i.e. zero normal 
 #include <petscksp.h>
 #include <petscdmda.h>
 
-#ifdef EXSADDLE_WITH_PCILUPACK
+#if defined(EXSADDLE_WITH_PCILUPACK)
 #include "pcilupack.h"
 #endif
-#ifdef EXSADDLE_WITH_PCILDL
+#if defined(EXSADDLE_WITH_PCILDL)
 #include "pcildl.h"
 #endif
 
@@ -1631,10 +1631,10 @@ int main(int argc,char **args)
 
   ierr = PetscInitialize(&argc,&args,(char*)0,help);CHKERRQ(ierr);
 
-#ifdef EXSADDLE_WITH_PCILUPACK
+#if defined(EXSADDLE_WITH_PCILUPACK)
   ierr = PCRegister(PCILUPACK,     PCCreate_ILUPACK     );CHKERRQ(ierr);
 #endif
-#ifdef EXSADDLE_WITH_PCILDL
+#if defined(EXSADDLE_WITH_PCILDL)
   ierr = PCRegister(PCILDL,        PCCreate_ILDL        );CHKERRQ(ierr);
 #endif
 

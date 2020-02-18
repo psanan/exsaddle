@@ -44,7 +44,7 @@ static PetscErrorCode ILUPACKSetUp(PC_ILUPACK *ilupack,PetscInt nA,PetscScalar v
   
   nB = (integer)nA;
 
-#ifdef PRINT_INFO
+#if defined(PRINT_INFO)
 
   for (i=0; i<nB; i++) {
     printf("%d : ",i);
@@ -119,7 +119,7 @@ static PetscErrorCode ILUPACKSetUp(PC_ILUPACK *ilupack,PetscInt nA,PetscScalar v
   ilupack->B.ja = ilupack->ja;
   ilupack->B.a = (void*) ilupack->a;
 
-#ifdef PRINT_INFO
+#if defined(PRINT_INFO)
   printf("nr : %d\n",ilupack->B.nr);
   printf("nc : %d\n",ilupack->B.nc);
   printf("nnz : %d\n",ilupack->B.nnz);
@@ -163,7 +163,7 @@ static PetscErrorCode ILUPACKSetUp(PC_ILUPACK *ilupack,PetscInt nA,PetscScalar v
   if (ilupackerr) {
     SETERRQ1(PETSC_COMM_WORLD,PETSC_ERR_LIB,"ILUPACK encountered an error during factorization: %d",ilupackerr);
   } else {
-#ifdef PCILUPACK_FILL_INFO 
+#if defined(PCILUPACK_FILL_INFO) 
     PetscErrorCode ierr;
     ierr=PetscPrintf(PETSC_COMM_WORLD,"factorization successful with %d levels completed\n", ilupack->PRE.nlev);CHKERRQ(ierr);
     ierr=PetscPrintf(PETSC_COMM_WORLD,"final elbow space factor=%8.2f\n",ilupack->param.elbow+0.005);CHKERRQ(ierr);

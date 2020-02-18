@@ -234,7 +234,7 @@ static PetscErrorCode FixedBase_ISCreate_BCList(DM dmv,PetscBool global,IS *_is,
 }
 #endif
 
-#ifdef LAME
+#if defined(LAME)
 /*****************************************************************************/
 static PetscErrorCode Compression_ISCreate_BCList(DM dmv,PetscBool global,IS *_is,PetscReal **_vals)
 {
@@ -615,7 +615,7 @@ PetscErrorCode ISCreate_BCList(DM dmv,PetscBool global,IS *_is,PetscReal **_vals
   ierr = PetscOptionsGetInt(NULL,NULL,"-model",&model,NULL);CHKERRQ(ierr);
 
   switch (model) {
-#ifdef LAME
+#if defined(LAME)
     case 8:
       ierr = FixedBase_ISCreate_BCList(dmv,global,_is,_vals);CHKERRQ(ierr);
       break;
@@ -647,7 +647,7 @@ PetscErrorCode ISCreate_BCList(DM dmv,PetscBool global,IS *_is,PetscReal **_vals
   PetscFunctionReturn(0);
 }
 
-#ifdef LAME
+#if defined(LAME)
 /*
 Lame' (Elasticity)
 */
