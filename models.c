@@ -337,6 +337,124 @@ static PetscErrorCode Compression_ISCreate_BCList(DM dmv,PetscBool global,IS *_i
 }
 #endif
 
+#if defined(LAME) && NSD == 3
+/*****************************************************************************/
+static PetscErrorCode Compression2_ISCreate_BCList(DM dmv,PetscBool global,IS *_is,PetscReal **_vals)
+{
+  PetscErrorCode   ierr;
+  PetscInt         i,j,k,si,sj,sk,ni,nj,nk,M,N,P;
+  PetscInt         *idx;
+  PetscInt         L,cnt;
+  IS               is;
+  PetscReal        *vals;
+  static PetscBool been_here = PETSC_FALSE;
+  const PetscReal  displacement = 0.1;
+ 
+  PetscFunctionBeginUser;
+
+  if (!been_here) {
+    PetscPrintf(PETSC_COMM_WORLD,"Boundary Conditions: Compression2\n");
+    been_here = PETSC_TRUE;
+  }
+
+  ierr = DMDAGetInfo(dmv,0,&M,&N,&P,0,0,0,0,0,0,0,0,0);CHKERRQ(ierr);
+  if (global) {
+    ierr = DMDAGetCorners(dmv,&si,&sj,&sk,&ni,&nj,&nk);CHKERRQ(ierr);
+  } else {
+    ierr = DMDAGetGhostCorners(dmv,&si,&sj,&sk,&ni,&nj,&nk);CHKERRQ(ierr);
+  }
+
+  /* Free slip on all faces except the top, which is unconstrained. Apply
+     opposing displacements on the left and right faces */
+  L = 0;
+  if (si == 0)    L += nj * nk; /* left face */
+  if (si+ni == N) L += nj * nk; /* right face */
+  if (sj == 0)    L += ni * nk; /* bottom face */
+  if (sk == 0)    L += nj * nk; /* back face */
+  if (sk+nk == P) L += nj * nk; /* front face */
+  PetscMalloc(sizeof(PetscInt)*L,&idx);
+  PetscMalloc(      sizeof(PetscScalar)*L,&vals);
+  PetscMemzero(vals,sizeof(PetscScalar)*L);
+  cnt = 0;
+  /* Displace on left face */
+  if (si == 0) {
+    const PetscInt dof_to_constrain = 0;
+
+    i = 0;
+    for (j=0; j<nj; ++j) {
+      for (k=0; k<nk; ++k) {
+        idx[cnt]  = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain; 
+        vals[cnt] = displacement;
+        ++cnt;
+      }
+    }
+  }
+  /* Displace (in the opposite direction) on the right face */
+  if (si+ni == N) {
+    const PetscInt dof_to_constrain = 0;
+
+    i = ni-1;
+    for (j=0; j<nj; ++j) {
+      for (k=0; k<nk; ++k) {
+        idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain; 
+        vals[cnt] = - displacement;
+        ++cnt;
+      }
+    }
+  }
+
+  /* Free slip on the bottom face */
+  if (sj == 0) {
+    const PetscInt dof_to_constrain = 1;
+
+    j = 0;
+    for (i=0; i<ni; ++i) {
+      for (k=0; k<nk; ++k) {
+        idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain; 
+        vals[cnt] = 0.0;
+        ++cnt;
+      }
+    }
+  }
+
+  /* Free slip on back face */
+  if (sk == 0) {
+    const PetscInt dof_to_constrain = 2;
+
+    k = 0;
+    for (i=0; i<ni; ++i) {
+      for (j=0; j<nj; ++j) {
+        idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain; 
+        vals[cnt] = 0.0;
+        ++cnt;
+      }
+    }
+  }
+
+  /* Free slip on front face */
+  if (sk+nk == P) {
+    const PetscInt dof_to_constrain = 2;
+
+    k = nk-1;
+    for (i=0; i<ni; ++i) {
+      for (j=0; j<nj; ++j) {
+        idx[cnt] = NSD*(i + j*ni + k*ni*nj )+dof_to_constrain; 
+        vals[cnt] = 0.0;
+        ++cnt;
+      }
+    }
+  }
+
+
+  ierr = ISCreateGeneral(PETSC_COMM_SELF,L,idx,PETSC_COPY_VALUES,&is);CHKERRQ(ierr);
+  PetscFree(idx);
+  *_is   = is;
+  *_vals = vals;
+  
+  PetscFunctionReturn(0);
+}
+#endif
+
 #ifndef LAME
 #if NSD==2
 /**********************************************************/
@@ -487,6 +605,8 @@ static PetscErrorCode StokesMMS1_ISCreate_BCList(DM dmv,PetscBool global,IS *_is
 #endif
 
 /*****************************************************************************/
+/* Note: using integer values to define models is bad design. It should be done
+   with an enumerated type */
 PetscErrorCode ISCreate_BCList(DM dmv,PetscBool global,IS *_is,PetscReal **_vals)
 {
   PetscErrorCode ierr;
@@ -503,17 +623,21 @@ PetscErrorCode ISCreate_BCList(DM dmv,PetscBool global,IS *_is,PetscReal **_vals
     case 10:
       ierr = Compression_ISCreate_BCList(dmv,global,_is,_vals);CHKERRQ(ierr);
       break;
-#else
+#endif
 #if NSD==3
     case 11:
       ierr = FixedBase_ISCreate_BCList(dmv,global,_is,_vals);CHKERRQ(ierr);
       break;
 #endif
-#if NSD==2
+#if defined(LAME) && NSD==3
+    case 12:
+      ierr = Compression2_ISCreate_BCList(dmv,global,_is,_vals);CHKERRQ(ierr);
+      break;
+#endif
+#if !defined(LAME) && NSD==2
     case 101:
       ierr = StokesMMS1_ISCreate_BCList(dmv,global,_is,_vals);CHKERRQ(ierr);
       break;
-#endif
 #endif
     default:
       ierr = SolCx_ISCreate_BCList(dmv,global,_is,_vals);CHKERRQ(ierr);
@@ -741,13 +865,12 @@ PetscErrorCode Lame_EvaluateCoefficients(PetscReal coor[],PetscReal *mu,PetscRea
       break;
     case 6:
     case 8: 
+    case 10: 
+    case 12:
       ierr = LameOneSinker_EvaluateCoefficients(coor,mu,lambda,Fu,Fp);CHKERRQ(ierr);
       break;
     case 9: 
       ierr = LameHomogeneous_EvaluateCoefficients(coor,mu,lambda,Fu,Fp);CHKERRQ(ierr);
-      break;
-    case 10: 
-      ierr = LameOneSinker_EvaluateCoefficients(coor,mu,lambda,Fu,Fp);CHKERRQ(ierr);
       break;
     default :
       SETERRQ1(PETSC_COMM_WORLD,PETSC_ERR_SUP,"Elasticity Model %d not implemented",model);
