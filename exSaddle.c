@@ -1,8 +1,8 @@
-static char help[] = "Solves the "
+static char help[] = "Solves "
 #if defined(LAME)
-"Lame' system "
+"a linear elasticity system, in mixed form, "
 #else
-"incompressible, variable viscosity Stokes equations "
+"the incompressible, variable viscosity Stokes equations "
 #endif
 "in "
 #if NSD==2
