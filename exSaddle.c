@@ -263,7 +263,7 @@ PetscErrorCode SaddleSolve_Q2Q1()
     ierr = DMCreateGlobalVector(dm_saddle,&F);CHKERRQ(ierr);
     ierr = VecDuplicate(F,&rhs_diri);CHKERRQ(ierr);
     for (k=0; k<nlevels; ++k) {
-      Vec rhs_diri_k = k==nlevels-1 ? rhs_diri : NULL ; /* NULL if k<nlevels-10 */
+      Vec rhs_diri_k = k==nlevels-1 ? rhs_diri : NULL ; /* NULL if k<nlevels-1 */
       ierr = DMCreateMatrix(dm_saddle_levels[k],&A_levels[k]);CHKERRQ(ierr);
       ierr = MatAssemble_Saddle_NULL(fespace_levels[k],dm_saddle_levels[k],A_levels[k]);CHKERRQ(ierr);
       ierr = MatAssemble_Saddle(fespace_levels[k],dm_saddle_levels[k],A_levels[k],rhs_diri_k);CHKERRQ(ierr);
