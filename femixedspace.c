@@ -2902,7 +2902,7 @@ PetscErrorCode MatAssemble_Schur(FEMixedSpace space,DM dmp,Mat S)
      
      and Lame' uses the same plus the non-zero 2,2 block 
 
-     S = - \int (1/\eta + 1/\mu) p q \, dV
+     S = - \int (1/\lambda + 1/\mu) p q \, dV
 
       Note: in some other examples (ex42 and ex43), instead the weighting is by the inverse of the average viscosity over the element
      
