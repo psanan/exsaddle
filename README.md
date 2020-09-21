@@ -1,7 +1,7 @@
 # exSaddle
 By Dave A. May and Patrick Sanan.
 
-PETSc codes to test preconditioners for Stokes and Lame' saddle-point systems.
+PETSc codes to test preconditioners for Stokes and mixed-form linear elasticity saddle-point systems.
 
 Requires [PETSc](https://mcs.anl.gov/petsc) 3.12 or later.
 
