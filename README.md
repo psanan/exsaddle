@@ -1,4 +1,7 @@
 # exSaddle
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4040667.svg)](https://doi.org/10.5281/zenodo.4040667)
+
 By Dave A. May and Patrick Sanan.
 
 PETSc codes to test preconditioners for Stokes and mixed-form linear elasticity saddle-point systems.
