@@ -1162,6 +1162,34 @@ PetscErrorCode StokesOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *
 #if NSD == 3
 /*
    (3d only)
+   Loads inclusion origins from a simple text file, with three floating point numbers per line.
+ */
+PetscErrorCode LoadInclusionOrigins(const char* filename,PetscInt ninclusions,PetscReal **_pos)
+{
+  PetscReal  *pos;
+  FILE       *fp;
+
+  PetscPrintf(PETSC_COMM_WORLD,"# LoadInclusionOrigins\n");
+  PetscPrintf(PETSC_COMM_WORLD,"Loading %D inclusion origin(s) from file: %s\n",ninclusions,filename);
+
+  PetscMalloc1(NSD*ninclusions,&pos);
+  if ((fp = fopen(filename,"r")) == NULL) SETERRQ1(PETSC_COMM_SELF,PETSC_ERR_FILE_OPEN,"Could not open inclusions file %s",filename);
+  for (PetscInt i=0; i<ninclusions; ++i) {
+    double xp, yp, zp;
+
+    if (fscanf(fp,"%lf %lf %lf",&xp,&yp,&zp) != 3) SETERRQ1(PETSC_COMM_SELF,PETSC_ERR_FILE_READ,"Could not read coordinates for inclusion %D. Does the file have enough lines?",i+1);
+    PetscPrintf(PETSC_COMM_WORLD,"%lf %lf %lf\n",xp,yp,zp);
+    /* Here, one could check that the points make sense with the specified radius, etc. */
+    pos[NSD*i+0] = xp;
+    pos[NSD*i+1] = yp;
+    pos[NSD*i+2] = zp;
+  }
+  *_pos   = pos;
+  PetscFunctionReturn(0);
+}
+
+/*
+   (3d only)
  Generates location of spherical inclusions in the domain [0,Lx]x[0,Ly]x[0,Lz] assuming the
  inclusions cannot overlap, and they must be some min distance from the boundary edges.
  */
@@ -1268,8 +1296,9 @@ PetscErrorCode SinkerPtatin_EvaluateCoefficients(PetscReal coor[],PetscReal *eta
 {
   PetscErrorCode   ierr;
   static PetscReal opts_eta0,opts_eta1,opts_rad,*centroidpos;
-  static PetscBool been_here = PETSC_FALSE;
+  static PetscBool opts_use_file = PETSC_FALSE, been_here = PETSC_FALSE;
   static PetscInt  opts_numinc;
+  static char      opts_inclusions_filename[PETSC_MAX_PATH_LEN];
   PetscReal        eta_qp,rho_qp;
   PetscBool        inside;
   PetscInt         k;
@@ -1286,10 +1315,16 @@ PetscErrorCode SinkerPtatin_EvaluateCoefficients(PetscReal coor[],PetscReal *eta
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta1",&opts_eta1,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-sinker_r",&opts_rad,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetInt(NULL,NULL,"-sinker_n",&opts_numinc,0);CHKERRQ(ierr);
+    ierr = PetscOptionsGetString(NULL,NULL,"-sinker_use_file",opts_inclusions_filename,PETSC_MAX_PATH_LEN-1,&opts_use_file);CHKERRQ(ierr);
     PetscPrintf(PETSC_COMM_WORLD,"  params: eta0 %1.4e\n",opts_eta0);
     PetscPrintf(PETSC_COMM_WORLD,"  params: eta1 %1.4e\n",opts_eta1);
 
-    ierr = GenerateInclusionOrigins(opts_numinc,opts_rad,1.0,1.0,1.0,1.5,1.5,&centroidpos);CHKERRQ(ierr);
+    if (opts_use_file) {
+      ierr = LoadInclusionOrigins(opts_inclusions_filename,opts_numinc,&centroidpos);CHKERRQ(ierr);
+    } else {
+      ierr = GenerateInclusionOrigins(opts_numinc,opts_rad,1.0,1.0,1.0,1.5,1.5,&centroidpos);CHKERRQ(ierr);
+      /* Here, one could consider dumping out the inclusion origins to a text file to use later */
+    }
 
     been_here = PETSC_TRUE;
   }
