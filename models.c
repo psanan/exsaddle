@@ -655,7 +655,7 @@ Lame' (Elasticity)
 PetscErrorCode LameOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu,PetscReal *lambda, PetscReal Fu[],PetscReal Fp[])
 {
   PetscErrorCode   ierr;
-  static PetscReal opts_mu0,opts_mu1,opts_lambda0,opts_lambda1,opts_rad;
+  static PetscReal opts_mu0,opts_mu1,opts_lambda0,opts_lambda1,opts_rad,opts_rho0,opts_rho1;
   static PetscBool been_here = PETSC_FALSE;
   PetscReal        mu_qp,lambda_qp,rho_qp;
   PetscBool        inside = PETSC_FALSE;
@@ -668,6 +668,8 @@ PetscErrorCode LameOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu
     opts_lambda0 = 1.0;
     opts_lambda1 = 2.0;
     opts_rad     = 0.25;
+    opts_rho0    = 1.0;
+    opts_rho1    = 2.0;
     ierr = PetscOptionsGetReal(NULL,NULL,"-mu0",&opts_mu0,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-mu1",&opts_mu1,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-lambda0",&opts_lambda0,0);CHKERRQ(ierr);
@@ -683,7 +685,7 @@ PetscErrorCode LameOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu
 
   mu_qp = opts_mu0;
   lambda_qp = opts_lambda0;
-  rho_qp = 1.0;
+  rho_qp = opts_rho0;
 
   {
 #if NSD == 2
@@ -695,7 +697,7 @@ PetscErrorCode LameOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu
   }
 
   if (inside) {
-    rho_qp = 2.0; /* 2x density inside the inclusion */
+    rho_qp = opts_rho1;
     mu_qp = opts_mu1;
     lambda_qp = opts_lambda1;
   }
@@ -722,7 +724,7 @@ PetscErrorCode LameOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu
 /******************************************************************************/
 PetscErrorCode LameXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu,PetscReal *lambda,PetscReal Fu[],PetscReal Fp[])
 {
-  static PetscReal opts_mu0,opts_mu1,opts_lambda0,opts_lambda1,opts_rad;
+  static PetscReal opts_mu0,opts_mu1,opts_lambda0,opts_lambda1,opts_rad,opts_rho0,opts_rho1;
   static PetscBool been_here = PETSC_FALSE;
   static PetscInt  opts_numinc;
   const PetscReal posx[8] = { 0.27 , 0.6  , 0.7  , 0.2 , 0.85  , 0.4 , 0.16 , 0.55 };
@@ -744,6 +746,8 @@ PetscErrorCode LameXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu,P
     opts_lambda1 = 1.0;
     opts_rad     = 0.05;
     opts_numinc  = 3;
+    opts_rho0    = 1.0;
+    opts_rho1    = 2.0;
 
     ierr = PetscOptionsGetReal(NULL,NULL,"-mu0",&opts_mu0,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-mu1",&opts_mu1,0);CHKERRQ(ierr);
@@ -769,7 +773,7 @@ PetscErrorCode LameXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu,P
 
   mu_qp     = opts_mu0;
   lambda_qp = opts_lambda0;
-  rho_qp    = 1.0;
+  rho_qp    = opts_rho0;
 
   for(i=0; i<opts_numinc; ++i){
 #if NSD == 2
@@ -786,7 +790,7 @@ PetscErrorCode LameXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu,P
   if (inside) {
     mu_qp     = opts_mu1;
     lambda_qp = opts_lambda1;
-    rho_qp = 1.1;
+    rho_qp = opts_rho1;
   }
 
   if (mu) {
@@ -812,7 +816,7 @@ PetscErrorCode LameXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *mu,P
 PetscErrorCode LameHomogeneous_EvaluateCoefficients(PetscReal coor[],PetscReal *mu,PetscReal *lambda, PetscReal Fu[],PetscReal Fp[])
 {
   PetscErrorCode   ierr;
-  static PetscReal opts_mu0,opts_lambda0;
+  static PetscReal opts_mu0,opts_lambda0,opts_rho0;
   static PetscBool been_here = PETSC_FALSE;
   PetscReal        mu_qp,lambda_qp,rho_qp;
 
@@ -821,6 +825,7 @@ PetscErrorCode LameHomogeneous_EvaluateCoefficients(PetscReal coor[],PetscReal *
     PetscPrintf(PETSC_COMM_WORLD,"ModelType: LameHomogeneous\n");
     opts_mu0     = 1.0;
     opts_lambda0 = 1.0;
+    opts_rho0    = 1.0;
     ierr = PetscOptionsGetReal(NULL,NULL,"-mu0",&opts_mu0,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-lambda0",&opts_lambda0,0);CHKERRQ(ierr);
     ierr = PetscPrintf(PETSC_COMM_WORLD,"  params: mu0 %1.4e\n",opts_mu0);CHKERRQ(ierr);
@@ -830,7 +835,7 @@ PetscErrorCode LameHomogeneous_EvaluateCoefficients(PetscReal coor[],PetscReal *
 
   mu_qp = opts_mu0;
   lambda_qp = opts_lambda0;
-  rho_qp = 1.0;
+  rho_qp = opts_rho0;
 
   if (lambda) {
     *lambda = lambda_qp;
@@ -935,7 +940,7 @@ PetscErrorCode StokesSolCx_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,
 /*****************************************************************************/
 PetscErrorCode StokesThreeSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,PetscReal Fu[],PetscReal Fp[])
 {
-  static PetscReal opts_eta0,opts_eta1,opts_rad;
+  static PetscReal opts_eta0,opts_eta1,opts_rad,opts_rho0,opts_rho1;
   static PetscBool been_here = PETSC_FALSE;
   PetscReal        eta_qp,rho_qp;
   PetscBool        inside = PETSC_FALSE;
@@ -947,6 +952,8 @@ PetscErrorCode StokesThreeSinker_EvaluateCoefficients(PetscReal coor[],PetscReal
     opts_eta0 = 1.0;
     opts_eta1 = 1.0;
     opts_rad = 0.1;
+    opts_rho0 = 1.0;
+    opts_rho1 = 1.1;
 
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta0",&opts_eta0,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta1",&opts_eta1,0);CHKERRQ(ierr);
@@ -958,7 +965,7 @@ PetscErrorCode StokesThreeSinker_EvaluateCoefficients(PetscReal coor[],PetscReal
   }
 
   eta_qp = opts_eta0;
-  rho_qp = 1.0;
+  rho_qp = opts_rho0;
 
   {
     PetscReal sep2;
@@ -985,7 +992,7 @@ PetscErrorCode StokesThreeSinker_EvaluateCoefficients(PetscReal coor[],PetscReal
 
   if (inside) {
     eta_qp = opts_eta1;
-    rho_qp = 1.1;
+    rho_qp = opts_rho1;
   }
 
   if (eta) {
@@ -1006,7 +1013,7 @@ PetscErrorCode StokesThreeSinker_EvaluateCoefficients(PetscReal coor[],PetscReal
 /*****************************************************************************/
 PetscErrorCode StokesXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,PetscReal Fu[],PetscReal Fp[])
 {
-  static PetscReal opts_eta0,opts_eta1,opts_rad;
+  static PetscReal opts_eta0,opts_eta1,opts_rad,opts_rho0,opts_rho1;
   static PetscBool been_here = PETSC_FALSE;
   static PetscInt  opts_numinc;
   const PetscReal posx[8] = { 0.27 , 0.6  , 0.7  , 0.2 , 0.85  , 0.4 , 0.16 , 0.55 };
@@ -1026,6 +1033,8 @@ PetscErrorCode StokesXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *et
     opts_eta1   = 1.0;
     opts_rad    = 0.05;
     opts_numinc = 3;
+    opts_rho0   = 1.0;
+    opts_rho1   = 1.1;
 
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta0",&opts_eta0,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta1",&opts_eta1,0);CHKERRQ(ierr);
@@ -1046,7 +1055,7 @@ PetscErrorCode StokesXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *et
   }
 
   eta_qp = opts_eta0;
-  rho_qp = 1.0;
+  rho_qp = opts_rho0;
 
   for(i=0; i<opts_numinc; ++i){
 #if NSD == 2
@@ -1062,7 +1071,7 @@ PetscErrorCode StokesXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *et
 
   if (inside) {
     eta_qp = opts_eta1;
-    rho_qp = 1.1;
+    rho_qp = opts_rho1;
   }
 
   if (eta) {
@@ -1084,7 +1093,7 @@ PetscErrorCode StokesXSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *et
 /*****************************************************************************/
 PetscErrorCode StokesOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,PetscReal Fu[],PetscReal Fp[])
 {
-  static PetscReal opts_eta0,opts_eta1,opts_rad,opts_x,opts_y;
+  static PetscReal opts_eta0,opts_eta1,opts_rad,opts_x,opts_y,opts_rho0,opts_rho1;
 #if NSD==3
   static PetscReal opts_z;
 #endif
@@ -1104,6 +1113,8 @@ PetscErrorCode StokesOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *
 #if NSD==3
     opts_z    = 0.5;
 #endif
+    opts_rho0 = 1.0;
+    opts_rho1 = 1.1;
 
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta0",&opts_eta0,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta1",&opts_eta1,0);CHKERRQ(ierr);
@@ -1125,7 +1136,7 @@ PetscErrorCode StokesOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *
   }
 
   eta_qp = opts_eta0;
-  rho_qp = 1.0;
+  rho_qp = opts_rho0;
 
   {
     PetscReal sep2;
@@ -1139,7 +1150,7 @@ PetscErrorCode StokesOneSinker_EvaluateCoefficients(PetscReal coor[],PetscReal *
 
   if (inside) {
     eta_qp = opts_eta1;
-    rho_qp = 1.1;
+    rho_qp = opts_rho1;
   }
 
   if (eta) {
@@ -1295,7 +1306,7 @@ START_INCLUSION:
 PetscErrorCode SinkerPtatin_EvaluateCoefficients(PetscReal coor[],PetscReal *eta,PetscReal Fu[],PetscReal Fp[])
 {
   PetscErrorCode   ierr;
-  static PetscReal opts_eta0,opts_eta1,opts_rad,*centroidpos;
+  static PetscReal opts_eta0,opts_eta1,opts_rad,*centroidpos,opts_rho0,opts_rho1;
   static PetscBool opts_use_file = PETSC_FALSE, been_here = PETSC_FALSE;
   static PetscInt  opts_numinc;
   static char      opts_inclusions_filename[PETSC_MAX_PATH_LEN];
@@ -1310,6 +1321,8 @@ PetscErrorCode SinkerPtatin_EvaluateCoefficients(PetscReal coor[],PetscReal *eta
     opts_eta1 = 1.1;
     opts_rad = 0.05;
     opts_numinc = 3;
+    opts_rho0 = 1.0;
+    opts_rho1 = 1.1;
 
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta0",&opts_eta0,0);CHKERRQ(ierr);
     ierr = PetscOptionsGetReal(NULL,NULL,"-eta1",&opts_eta1,0);CHKERRQ(ierr);
@@ -1330,7 +1343,7 @@ PetscErrorCode SinkerPtatin_EvaluateCoefficients(PetscReal coor[],PetscReal *eta
   }
 
   eta_qp = opts_eta0;
-  rho_qp = 1.0;
+  rho_qp = opts_rho0;
 
   inside = PETSC_FALSE;
   for (k=0; k<opts_numinc; ++k) {
@@ -1351,7 +1364,7 @@ PetscErrorCode SinkerPtatin_EvaluateCoefficients(PetscReal coor[],PetscReal *eta
 
   if (inside) {
     eta_qp = opts_eta1;
-    rho_qp = 1.1;
+    rho_qp = opts_rho1;
   }
 
   if (eta) {
