@@ -26,7 +26,7 @@ static char help[] = "Solves "
 #endif
 "-model 6 : single sinker \n"
 #if NSD == 3
-"-model 7 : lots of sinkers, controlled by -sinker_n \n"
+"-model 7 : lots of sinkers, controlled by -sinker_n and -sinker_use_file\n"
 #endif
 #if defined(LAME)
 "-model 8 : one inclusion, fixed base, free elsewhere \n"
